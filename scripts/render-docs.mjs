@@ -68,6 +68,7 @@ const shell = (title, body, description = 'Crab framework documentation.') => `<
   <meta name="description" content="${escapeHtml(description)}">
   <title>${escapeHtml(title)} · Crab</title>
   <link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="${cssUrl}">
 </head>
 <body>

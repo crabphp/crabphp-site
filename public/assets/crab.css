@@ -101,6 +101,10 @@ hr::before { content: "~*~"; }
 .faint { color: var(--faint); }
 .section { margin-top: calc(var(--lh) * 3); }
 .cursor { color: var(--amber); }
+/* Cua, the mascot: two lines of block characters. Its eyes are cut out of the middle row and blink. */
+.mascot { width: max-content; margin: 0 0 var(--lh); padding: 0; background: none; border: 0; overflow: visible; color: var(--amber); line-height: 1; }
+.mascot .eyes { display: inline-block; position: relative; }
+.mascot .eyes::after { content: "███████"; position: absolute; inset: 0; opacity: 0; }
 
 .code-comment { color: var(--faint); }
 .code-keyword, .code-string { color: var(--amber); }
@@ -143,8 +147,11 @@ details[open] > summary::after { content: " −"; }
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
   .cursor { animation: blink 1s steps(1) infinite; }
+  .mascot .eyes::after { animation: shut 6s steps(1) 1s infinite; }
 }
 @keyframes blink { 50% { opacity: 0; } }
+/* Twice in quick succession, then a long pause. */
+@keyframes shut { 0%, 4%, 7%, 100% { opacity: 0; } 2%, 5% { opacity: 1; } }
 
 /* Narrow screens: the docs nav becomes a bar that stays at the top and opens into a menu. */
 @media (max-width: 860px) {

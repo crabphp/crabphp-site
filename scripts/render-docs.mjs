@@ -1,9 +1,13 @@
 import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { marked } from 'marked';
 
 const siteRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+// A stylesheet URL that changes with its content, so new pages never get an old cached copy.
+const cssHash = createHash('sha256').update(await readFile(join(siteRoot, 'public', 'assets', 'crab.css'))).digest('hex').slice(0, 10);
+const cssUrl = `/assets/crab.css?v=${cssHash}`;
 const sourceRoot = join(siteRoot, 'public', 'content', 'docs');
 const publicDocsRoot = join(siteRoot, 'public', 'docs');
 const escapeHtml = (value) => value
@@ -64,7 +68,7 @@ const shell = (title, body, description = 'Crab framework documentation.') => `<
   <meta name="description" content="${escapeHtml(description)}">
   <title>${escapeHtml(title)} · Crab</title>
   <link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/crab.css">
+  <link rel="stylesheet" href="${cssUrl}">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>

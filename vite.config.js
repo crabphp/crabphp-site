@@ -1,6 +1,18 @@
-import { createReadStream, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { createReadStream, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { defineConfig } from 'vite';
+
+// Same versioned stylesheet URL as scripts/render-docs.mjs writes into the docs pages.
+function versionedStylesheet() {
+  return {
+    name: 'versioned-stylesheet',
+    transformIndexHtml(html) {
+      const hash = createHash('sha256').update(readFileSync(join(process.cwd(), 'public', 'assets', 'crab.css'))).digest('hex').slice(0, 10);
+      return html.replace('href="/assets/crab.css"', `href="/assets/crab.css?v=${hash}"`);
+    },
+  };
+}
 
 function generatedDirectoryPages() {
   return {
@@ -29,7 +41,7 @@ function generatedDirectoryPages() {
 export default defineConfig({
   root: '.',
   publicDir: 'public',
-  plugins: [generatedDirectoryPages()],
+  plugins: [generatedDirectoryPages(), versionedStylesheet()],
   build: {
     outDir: 'dist',
     emptyOutDir: true,

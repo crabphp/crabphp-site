@@ -56,7 +56,10 @@ The page has `40px` padding (`24px 16px` on small screens) and is left-aligned, 
 - Header: wordmark `crab.` and a row of text links.
 - Definition list `.defs`: term column plus description, for principles and commands.
 - Benchmark table.
-- Docs: a `22ch` sticky navigation column and a `--measure` content column. Group labels are faint text, not headings. The current page has `aria-current="page"`, shows in amber, and is prefixed with `> `. Below `860px` the nav moves above the content in columns.
+- Docs: a `22ch` sticky navigation column and a `--measure` content column. Group labels are faint text, not headings. The current page has `aria-current="page"`, shows in amber, and is prefixed with `> `.
+- On this page: the list of sections each page opens with, as a `details` (`+` / `−`).
+- Below `860px` the navigation becomes a bar stuck to the top, `Docs / Page title`, that opens into a scrolling menu; it and On this page start closed. Both are open in the HTML and closed by a tiny inline script, so everything works without JavaScript.
+- Below `560px` text goes to `14px / 22px`, code to `13px`, code blocks run to the screen edges, and every link is at least 28px tall.
 - Pager: previous, source, next.
 - Footer: one faint line framed by `~*~`.
 
@@ -76,7 +79,7 @@ Direct, calm, and specific. Short sentences. Explain why, not only what. No hype
 ## Repository
 
 - `index.html` is the landing page, built by Vite.
-- `public/assets/crab.css` is the only stylesheet; `public/assets/fonts/` holds the fonts and licence. Both are copied as they are, so `_headers` caches the fonts forever and the stylesheet for an hour.
+- `public/assets/crab.css` is the only stylesheet; `public/assets/fonts/` holds the fonts and licence. Both are copied as they are and cached forever; pages link the stylesheet as `crab.css?v=<hash of its content>` (written by `render-docs.mjs` and by a Vite hook for `index.html`), so a change gets a new URL.
 - `scripts/sync-docs.mjs` copies Markdown from the framework repo into `public/content/docs/` (generated).
 - `scripts/render-docs.mjs` renders it into `public/docs/` (generated), with GitHub-style heading ids so the Markdown's anchors work. It also writes `public/llms.txt` (an index of the Markdown pages for agents) and `public/llms-full.txt` (the whole guide in one file), both generated.
 - Update this document before adding a colour, a size, or a new layout pattern.

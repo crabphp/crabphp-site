@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="Crab is a minimal PHP 8.4 framework for fast, explicit JSON APIs.">
+  <title>Crab — PHP for serious software</title>
+  <link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/crab.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="page">
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Crab home">crab<span>.</span></a>
+      <nav aria-label="Primary navigation">
+        <a href="/docs/">Docs</a>
+        <a href="#benchmarks">Benchmarks</a>
+        <a href="https://github.com/crabphp/framework">GitHub</a>
+        <a href="https://packagist.org/packages/crabphp/framework">Packagist</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <h1>A PHP framework for serious software <span class="cursor" aria-hidden="true">█</span></h1>
+      <p class="lede">Fast, explicit, and small enough to understand. Crab gives long-lived PHP applications a clear foundation for APIs, services, and the work around them.</p>
+      <p class="faint">PHP 8.4 · MIT · open source</p>
+      <pre><code>composer create-project crabphp/crab my-app
+cd my-app
+php cua dev</code></pre>
+      <p><a href="/docs/installation/">Read the documentation <span aria-hidden="true">→</span></a></p>
+
+      <section class="section" aria-labelledby="why">
+        <h2 id="why">One way to do each thing</h2>
+        <dl class="defs">
+          <dt>Explicit</dt><dd>Typed actions, named services, ordinary PHP. The important parts stay visible instead of hiding behind conventions.</dd>
+          <dt>Long-lived</dt><dd>The application loads once and serves requests as a real server. No PHP-FPM, no bootstrapping on every request.</dd>
+          <dt>Complete</dt><dd>Routing, validation, databases, queues, scheduling, authentication, HTTP, streaming, and WebSockets on one small foundation.</dd>
+        </dl>
+      </section>
+
+      <section class="section" aria-labelledby="built">
+        <h2 id="built">Included</h2>
+        <ul>
+          <li><a href="/docs/routing/">Routing</a> <span class="muted">typed parameters and groups</span></li>
+          <li><a href="/docs/actions/">Actions</a> <span class="muted">classes that say what they need</span></li>
+          <li><a href="/docs/validation/">Validation</a> <span class="muted">input checked before your action</span></li>
+          <li><a href="/docs/database/">Database</a> <span class="muted">SQLite and MySQL, async when needed</span></li>
+          <li><a href="/docs/queues/">Queues</a> <span class="muted">durable work outside a request</span></li>
+          <li><a href="/docs/ai/">AI applications</a> <span class="muted">streaming, runs, and actors</span></li>
+          <li><a href="/docs/testing/">Testing</a> <span class="muted">requests without a server</span></li>
+          <li><a href="/docs/deployment/">Deployment</a> <span class="muted">a server you can operate</span></li>
+        </ul>
+      </section>
+
+      <section class="section" aria-labelledby="code">
+        <h2 id="code">A route is just a route</h2>
+        <pre><code><span class="code-comment">// routes/web.php</span>
+<span class="code-keyword">use</span> Crab\Route;
+
+Route::get(<span class="code-string">'/hello/{name}'</span>, <span class="code-keyword">static function</span> (string $name): array {
+    <span class="code-keyword">return</span> [<span class="code-string">'hello'</span> =&gt; $name];
+});</code></pre>
+      </section>
+
+      <section class="section" aria-labelledby="agents">
+        <h2 id="agents">Written for agents too</h2>
+        <p class="muted">Explicit types, no hidden state, one way to do each thing. The same things that make code easy for a person to read make it easy for a coding agent to get right.</p>
+        <pre><code><span class="code-comment">$</span> php cua describe routes
+routes
+  POST /orders -&gt; App\Actions\PlaceOrder via Crab\Auth\TokenAuth
+    body { lines: Array&lt;{ productId: int; quantity?: int | null (minimum=1, maximum=20, default=1) }&gt; (minItems=1, maxItems=20) }
+    user: App\User
+  GET /products/{id} -&gt; App\Actions\ShowProduct
+    {id}: int</code></pre>
+        <dl class="defs">
+          <dt>describe</dt><dd>The whole application in one read: routes and what each takes, middleware, commands, schedule, listeners, databases, settings. One thing per line, in few tokens. <code>--json</code> gives JSON Schema.</dd>
+          <dt>AGENTS.md</dt><dd>Every new app ships with one: where things go, the rules a long-lived server needs, and how to check the work.</dd>
+          <dt>problem:</dt><dd><code>describe app</code> lists settings that do not fit and services that cannot be made, before <code>start</code> refuses them.</dd>
+          <dt>Markdown</dt><dd>The guide is plain Markdown, in <code>vendor/crabphp/framework/docs/</code> and at <a href="/llms.txt">/llms.txt</a>.</dd>
+        </dl>
+        <p><a href="/docs/console/#describing-the-application">Describing the application <span aria-hidden="true">→</span></a></p>
+      </section>
+
+      <section class="section" aria-labelledby="deploy">
+        <h2 id="deploy">One command runs all of it</h2>
+        <p class="muted">HTTP, queue workers, and the scheduler start together. No Supervisor config, no systemd unit per worker, no crontab line. List the queue and the scheduler in <code>app.php</code>, then start.</p>
+        <pre><code><span class="code-comment">$</span> php cua start --daemon
+Starting Shop server on http://127.0.0.1:8080
+
+  Server    Workers  Runs
+  http      2        http://127.0.0.1:8080
+  queue     3        queue:work: mail x1, default x2
+  schedule  1        schedule:work</code></pre>
+        <dl class="defs">
+          <dt>--daemon</dt><dd>Runs in the background and returns once it is up. A worker that dies is started again.</dd>
+          <dt>reload</dt><dd>HTTP, the queue, and the scheduler get the new code together, without refusing a connection.</dd>
+          <dt>status</dt><dd>Every worker, what it has handled, and its memory, in one table.</dd>
+        </dl>
+        <p><a href="/docs/deployment/">Deployment guide <span aria-hidden="true">→</span></a></p>
+      </section>
+
+      <section class="section" aria-labelledby="benchmarks">
+        <h2 id="benchmarks">Benchmarks</h2>
+        <p class="muted">Requests per second, median, 64 persistent connections.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Framework</th><th scope="col" class="num">Hello</th><th scope="col" class="num">Database</th><th scope="col" class="num">Validation</th></tr>
+            </thead>
+            <tbody>
+              <tr class="crab-row"><th scope="row">Crab</th><td class="num">200,401</td><td class="num">18,367</td><td class="num">101,389</td></tr>
+              <tr><th scope="row">webman <span class="faint">Workerman</span></th><td class="num">146,898</td><td class="num">8,314</td><td class="num">11,873</td></tr>
+              <tr><th scope="row">Hyperf <span class="faint">Swoole</span></th><td class="num">97,048</td><td class="num">20,102</td><td class="num">13,225</td></tr>
+              <tr><th scope="row">Symfony <span class="faint">FrankenPHP</span></th><td class="num">12,718</td><td class="num">7,442</td><td class="num">10,116</td></tr>
+              <tr><th scope="row">Spiral <span class="faint">RoadRunner</span></th><td class="num">5,519</td><td class="num">3,654</td><td class="num">4,912</td></tr>
+              <tr><th scope="row">Laravel <span class="faint">Octane</span></th><td class="num">4,106</td><td class="num">2,463</td><td class="num">2,870</td></tr>
+              <tr><th scope="row">Tempest <span class="faint">FrankenPHP</span></th><td colspan="3" class="num faint">needs PHP 8.5</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="faint">Measured on one Apple M1 Pro with small, matched workloads. Not a universal ranking or a capacity estimate. <a href="https://github.com/crabphp/framework/blob/main/benchmarks/frameworks/README.md">Methodology and raw results <span aria-hidden="true">↗</span></a></p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>~*~ crab · MIT licensed · PHP 8.4+ · <a href="https://github.com/crabphp">github.com/crabphp <span aria-hidden="true">↗</span></a> ~*~</p>
+    </footer>
+  </div>
+</body>
+</html>

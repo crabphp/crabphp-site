@@ -1,0 +1,21 @@
+{
+  "name": "crabphp-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The CrabPHP public website and documentation.",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run sync:docs && npm run render:docs && vite",
+    "sync:docs": "node scripts/sync-docs.mjs",
+    "render:docs": "node scripts/render-docs.mjs",
+    "build": "npm run sync:docs && npm run render:docs && vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name crabphp-site",
+    "check": "npm run build"
+  },
+  "devDependencies": {
+    "marked": "^15.0.12",
+    "vite": "^6.1.0",
+    "wrangler": "^4.158.0"
+  }
+}

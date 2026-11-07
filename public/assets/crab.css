@@ -25,6 +25,7 @@
   --size: 13px;
   --lh: 21px;
   --measure: 680px;
+  --pad-x: 40px;
 }
 
 * { box-sizing: border-box; }
@@ -119,15 +120,22 @@ th.num, td.num { padding-right: 0; padding-left: 2ch; }
 /* Documentation */
 .docs { display: grid; grid-template-columns: 22ch minmax(0, var(--measure)); gap: 0 6ch; }
 .docs-nav { position: sticky; top: 40px; align-self: start; max-height: calc(100vh - 80px); overflow-y: auto; }
+.docs-nav > summary { display: none; }
 .docs-nav p { margin: 0; color: var(--faint); }
 .docs-nav ul { list-style: none; padding: 0; }
 .docs-nav a { color: var(--muted); }
 .docs-nav a:hover, .docs-nav a[aria-current="page"] { color: var(--amber); }
 .docs-nav a[aria-current="page"]::before { content: "> "; }
 .doc { min-width: 0; }
-.doc h1 + ul { color: var(--muted); }
-.doc h1 + ul ul { margin: 0; }
-.doc :not(pre) > code { color: var(--strong); }
+summary { cursor: pointer; list-style: none; color: var(--strong); }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: " +"; color: var(--amber); }
+details[open] > summary::after { content: " −"; }
+.toc { margin-bottom: calc(var(--lh) * 2); }
+.toc > summary { color: var(--faint); }
+.toc ul { margin: 0; color: var(--muted); }
+.toc > ul { margin-top: calc(var(--lh) / 2); }
+.doc :not(pre) > code { color: var(--strong); overflow-wrap: anywhere; }
 .doc table { display: block; overflow-x: auto; }
 .pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 3ch; margin-top: calc(var(--lh) * 3); }
 .pager span { color: var(--faint); }
@@ -138,15 +146,46 @@ th.num, td.num { padding-right: 0; padding-left: 2ch; }
 }
 @keyframes blink { 50% { opacity: 0; } }
 
+/* Narrow screens: the docs nav becomes a bar that stays at the top and opens into a menu. */
 @media (max-width: 860px) {
+  html { scroll-padding-top: calc(var(--lh) * 3); }
   .docs { display: block; }
-  .docs-nav { position: static; max-height: none; margin-bottom: calc(var(--lh) * 2); columns: 2 22ch; column-gap: 4ch; }
-  .docs-nav ul { break-inside: avoid; }
+  .docs-nav {
+    position: sticky; top: 0; z-index: 1;
+    max-height: none; overflow: visible;
+    margin: 0 calc(var(--pad-x) * -1) calc(var(--lh) * 2);
+    padding: 0 var(--pad-x);
+    background: var(--bg);
+  }
+  .docs-nav > summary {
+    display: block;
+    padding: calc(var(--lh) / 2) 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .docs-nav > summary span { color: var(--amber); }
+  .docs-nav[open] > summary { color: var(--muted); }
+  .docs-nav nav {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(18ch, 1fr)); gap: 0 4ch; align-items: start;
+    max-height: 70dvh;
+    overflow-y: auto; overscroll-behavior: contain;
+    padding-bottom: var(--lh);
+  }
+  .docs-nav ul { margin-bottom: calc(var(--lh) / 2); }
+  .docs-nav a { display: block; padding: 4px 0; }
+  .toc a, .pager a, .site-header a { display: inline-block; padding: 4px 0; }
+  .site-header { align-items: baseline; }
 }
 
 @media (max-width: 560px) {
-  body { padding: 24px 16px; }
-  .skip-link { left: 16px; }
+  :root { --size: 14px; --lh: 22px; --pad-x: 16px; }
+  body { padding: 24px var(--pad-x); }
+  .skip-link { left: var(--pad-x); }
+  .site-header { margin-bottom: calc(var(--lh) * 2); }
   .defs { grid-template-columns: 1fr; }
   .defs dd { margin-bottom: calc(var(--lh) / 2); }
+  /* Code runs to the screen's edges, so long lines get the full width to scroll in. */
+  pre, .doc table { margin-inline: calc(var(--pad-x) * -1); padding-inline: var(--pad-x); }
+  .doc pre { font-size: 13px; }
+  .pager { flex-direction: column; gap: calc(var(--lh) / 2); }
+  .pager span:empty { display: none; }
 }

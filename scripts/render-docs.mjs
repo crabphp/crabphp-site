@@ -38,6 +38,23 @@ const render = (markdown) => {
   return rewriteLinks(marked.parse(markdown));
 };
 
+// Navigation and "On this page" are open in the HTML, so they work without JavaScript.
+// On a narrow screen this closes them before the first paint and keeps them in step on resize.
+// It runs right after the last of them, before the page content is parsed.
+const collapseScript = `<script>(() => { const narrow = matchMedia('(max-width: 860px)'); const sync = () => { for (const d of document.querySelectorAll('details[data-collapse]')) d.open = !narrow.matches; }; sync(); narrow.addEventListener('change', sync); })();</script>`;
+
+// Every page opens with "# Title" and a list of links to its sections.
+// That list becomes a collapsible "On this page".
+const renderPage = (markdown) => {
+  const opening = markdown.match(/^(# .+\n)\s*\n((?:[ \t]*- \[.+\n)+)/);
+  if (!opening) return collapseScript + render(markdown);
+  seenSlugs = new Map();
+  const title = marked.parse(opening[1]);
+  const toc = rewriteLinks(marked.parse(opening[2]));
+  const rest = rewriteLinks(marked.parse(markdown.slice(opening[0].length)));
+  return `${title}<details class="toc" data-collapse open><summary>On this page</summary>${toc}</details>${collapseScript}${rest}`;
+};
+
 const shell = (title, body, description = 'Crab framework documentation.') => `<!doctype html>
 <html lang="en">
 <head>
@@ -79,12 +96,12 @@ for (const line of menu.split('\n')) {
 await rm(publicDocsRoot, { recursive: true, force: true });
 await mkdir(publicDocsRoot, { recursive: true });
 
-const nav = (current = null) => groups.map(({ title, pages }) => `<p>${escapeHtml(title)}</p><ul>${pages.map((page) => {
+const nav = (current = null) => groups.map(({ title, pages }) => `<div><p>${escapeHtml(title)}</p><ul>${pages.map((page) => {
   const href = page.external ? page.href : pageUrl(page.file);
   const here = !page.external && page.file === current ? ' aria-current="page"' : '';
   const mark = page.external ? ' <span aria-hidden="true">↗</span>' : '';
   return `<li><a href="${href}"${here}>${escapeHtml(page.title)}${mark}</a></li>`;
-}).join('')}</ul>`).join('');
+}).join('')}</ul></div>`).join('');
 
 const index = groups.map(({ title, pages }) => `<h2>${escapeHtml(title)}</h2><ul>${pages.map((page) => `<li><a href="${page.external ? page.href : pageUrl(page.file)}">${escapeHtml(page.title)}</a>${page.external ? ' <span aria-hidden="true">↗</span>' : ''}</li>`).join('')}</ul>`).join('');
 const docsIndexBody = `<main id="main" class="page">
@@ -102,8 +119,11 @@ for (const [position, page] of localPages.entries()) {
   const next = localPages[position + 1];
   const pager = `<nav class="pager" aria-label="Previous and next page">${previous ? `<a href="${pageUrl(previous.file)}" rel="prev">← ${escapeHtml(previous.title)}</a>` : '<span></span>'}<a href="https://github.com/crabphp/framework/tree/main/docs/${page.file}">Source <span aria-hidden="true">↗</span></a>${next ? `<a href="${pageUrl(next.file)}" rel="next">${escapeHtml(next.title)} →</a>` : '<span></span>'}</nav>`;
   const html = `<div class="docs">
-  <nav class="docs-nav" aria-label="Documentation pages">${nav(page.file)}</nav>
-  <main id="main" class="doc">${render(markdown)}${pager}</main>
+  <details class="docs-nav" data-collapse open>
+    <summary><span>Docs</span> / ${escapeHtml(page.title)}</summary>
+    <nav aria-label="Documentation pages">${nav(page.file)}</nav>
+  </details>
+  <main id="main" class="doc">${renderPage(markdown)}${pager}</main>
 </div>`;
   await mkdir(join(publicDocsRoot, file), { recursive: true });
   await writeFile(join(publicDocsRoot, file, 'index.html'), shell(page.title, html));

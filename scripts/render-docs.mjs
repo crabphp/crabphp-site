@@ -138,7 +138,7 @@ const siteUrl = (process.env.SITE_URL || 'https://crab.daudau.cc').replace(/\/$/
 const llmsIndex = [
   '# Crab',
   '',
-  '> A minimal PHP 8.4 framework for JSON APIs. The application runs as a long-lived server: explicit types, no hidden state, one way to do each thing.',
+  '> A minimal PHP framework for JSON APIs. The application runs as a long-lived server: explicit types, no hidden state, one way to do each thing.',
   '',
   'In a Crab application, run `php cua describe` to read every route, command, scheduled task, listener, database and setting before reading files (`--json` for JSON Schema). The app\'s `AGENTS.md` has the conventions, and the guide is also in `vendor/crabphp/framework/docs/`.',
   '',

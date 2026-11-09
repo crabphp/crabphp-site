@@ -38,7 +38,7 @@ All vertical spacing is a multiple of `--lh`:
 - `2 × --lh` before `##` and deeper headings.
 - `3 × --lh` between landing-page sections and before the pager.
 
-The page has `40px` padding (`24px 16px` on small screens) and is left-aligned, not centered.
+The page has `40px` padding (`24px 16px` on small screens) and a centered max-width container. Text inside the container remains left-aligned.
 
 ## Text elements
 

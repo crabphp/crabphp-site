@@ -93,7 +93,7 @@ hr::before { content: "~*~"; }
 .skip-link { position: absolute; left: 40px; top: -80px; padding: 0 1ch; background: var(--amber); color: var(--bg); }
 .skip-link:focus { top: 8px; }
 
-.page { max-width: var(--measure); }
+.page { max-width: var(--measure); margin-inline: auto; }
 .site-header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 3ch; margin-bottom: calc(var(--lh) * 3); }
 .site-header nav { display: flex; flex-wrap: wrap; gap: 0 3ch; }
 .wordmark { color: var(--strong); font-weight: 700; }

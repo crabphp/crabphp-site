@@ -103,7 +103,7 @@ hr::before { content: "~*~"; }
 .section { margin-top: calc(var(--lh) * 3); }
 .cursor { color: var(--amber); }
 /* Cua, the mascot: two lines of block characters. Its eyes are cut out of the middle row and blink. */
-.mascot { width: max-content; margin: 0 0 var(--lh); padding: 0; background: none; border: 0; overflow: visible; color: var(--amber); font-family: "JetBrains Mono", monospace; line-height: 1; }
+.mascot { width: max-content; margin: 0 0 var(--lh); padding: 0; background: none; border: 0; overflow: visible; color: var(--amber); font-family: monospace; line-height: 1; }
 .mascot .eyes { display: inline-block; position: relative; }
 .mascot .eyes::after { content: "███████"; position: absolute; inset: 0; opacity: 0; }
 

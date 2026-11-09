@@ -26,19 +26,59 @@
       <pre class="mascot" role="img" aria-label="Cua, the Crab mascot: a small crab with its claws raised">▙▟▗▄▄▄▄▄▖▙▟
  ▝<span class="eyes">█▄███▄█</span>▘</pre>
       <h1>Make PHP great again <span class="cursor" aria-hidden="true">█</span></h1>
-      <p class="lede">Fast, explicit, and small enough to understand. Crab gives long-lived PHP applications a clear foundation for APIs, services, and the work around them.</p>
+      <p class="lede">Fast to run, easy to use, and small enough to understand. Crab gives long-lived PHP applications a clear foundation for APIs, services, and the work around them.</p>
       <pre><code>composer create-project crabphp/crab my-app
 cd my-app
 php cua dev</code></pre>
       <p><a href="/docs/installation/">Read the documentation <span aria-hidden="true">→</span></a></p>
 
       <section class="section" aria-labelledby="why">
-        <h2 id="why">One way to do each thing</h2>
+        <h2 id="why">Fast to run. Easy to use.</h2>
         <dl class="defs">
-          <dt>Explicit</dt><dd>Typed actions, named services, ordinary PHP. The important parts stay visible instead of hiding behind conventions.</dd>
-          <dt>Long-lived</dt><dd>The application loads once and serves requests as a real server. No PHP-FPM, no bootstrapping on every request.</dd>
+          <dt>Fast</dt><dd>The application loads once and serves requests as a real server. No PHP-FPM, no bootstrapping on every request.</dd>
+          <dt>Easy</dt><dd>Typed actions, named services, ordinary PHP. One way to do each thing keeps the important parts visible.</dd>
           <dt>Complete</dt><dd>Routing, validation, databases, queues, scheduling, authentication, HTTP, streaming, and WebSockets on one small foundation.</dd>
         </dl>
+      </section>
+
+      <section class="section" aria-labelledby="benchmarks">
+        <h2 id="benchmarks">Benchmarks</h2>
+        <p class="muted">Requests per second, median, 64 persistent connections.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Framework</th><th scope="col" class="num">Hello</th><th scope="col" class="num">Database</th></tr>
+            </thead>
+            <tbody>
+              <tr class="crab-row"><th scope="row">Crab</th><td class="num">200,401</td><td class="num">18,367</td></tr>
+              <tr><th scope="row">webman <span class="faint">Workerman</span></th><td class="num">146,898</td><td class="num">8,314</td></tr>
+              <tr><th scope="row">Hyperf <span class="faint">Swoole</span></th><td class="num">97,048</td><td class="num">20,102</td></tr>
+              <tr><th scope="row">Symfony <span class="faint">FrankenPHP</span></th><td class="num">12,718</td><td class="num">7,442</td></tr>
+              <tr><th scope="row">Spiral <span class="faint">RoadRunner</span></th><td class="num">5,519</td><td class="num">3,654</td></tr>
+              <tr><th scope="row">Laravel <span class="faint">Octane</span></th><td class="num">4,106</td><td class="num">2,463</td></tr>
+              <tr><th scope="row">Tempest <span class="faint">FrankenPHP</span></th><td colspan="2" class="num faint">needs PHP 8.5</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="faint">Measured on one Apple M1 Pro with small, matched workloads. Not a universal ranking or a capacity estimate. <a href="https://github.com/crabphp/framework/blob/main/benchmarks/frameworks/README.md">Methodology and raw results <span aria-hidden="true">↗</span></a></p>
+      </section>
+
+      <section class="section" aria-labelledby="deploy">
+        <h2 id="deploy">One command runs all of it</h2>
+        <p class="muted">HTTP, queue workers, and the scheduler start together. No Supervisor config, no systemd unit per worker, no crontab line. List the queue and the scheduler in <code>app.php</code>, then start.</p>
+        <pre><code><span class="code-comment">$</span> php cua start --daemon
+Starting Shop server on http://127.0.0.1:8080
+
+  Server    Workers  Runs
+  http      2        http://127.0.0.1:8080
+  queue     3        queue:work: mail x1, default x2
+  schedule  1        schedule:work</code></pre>
+        <dl class="defs">
+          <dt>--daemon</dt><dd>Runs in the background and returns once it is up. A worker that dies is started again.</dd>
+          <dt>reload</dt><dd>HTTP, the queue, and the scheduler get the new code together, without refusing a connection.</dd>
+          <dt>status</dt><dd>Every worker, what it has handled, and its memory, in one table.</dd>
+        </dl>
+        <p><a href="/docs/deployment/">Deployment guide <span aria-hidden="true">→</span></a></p>
       </section>
 
       <section class="section" aria-labelledby="built">
@@ -84,45 +124,6 @@ routes
         <p><a href="/docs/console/#describing-the-application">Describing the application <span aria-hidden="true">→</span></a></p>
       </section>
 
-      <section class="section" aria-labelledby="deploy">
-        <h2 id="deploy">One command runs all of it</h2>
-        <p class="muted">HTTP, queue workers, and the scheduler start together. No Supervisor config, no systemd unit per worker, no crontab line. List the queue and the scheduler in <code>app.php</code>, then start.</p>
-        <pre><code><span class="code-comment">$</span> php cua start --daemon
-Starting Shop server on http://127.0.0.1:8080
-
-  Server    Workers  Runs
-  http      2        http://127.0.0.1:8080
-  queue     3        queue:work: mail x1, default x2
-  schedule  1        schedule:work</code></pre>
-        <dl class="defs">
-          <dt>--daemon</dt><dd>Runs in the background and returns once it is up. A worker that dies is started again.</dd>
-          <dt>reload</dt><dd>HTTP, the queue, and the scheduler get the new code together, without refusing a connection.</dd>
-          <dt>status</dt><dd>Every worker, what it has handled, and its memory, in one table.</dd>
-        </dl>
-        <p><a href="/docs/deployment/">Deployment guide <span aria-hidden="true">→</span></a></p>
-      </section>
-
-      <section class="section" aria-labelledby="benchmarks">
-        <h2 id="benchmarks">Benchmarks</h2>
-        <p class="muted">Requests per second, median, 64 persistent connections.</p>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th scope="col">Framework</th><th scope="col" class="num">Hello</th><th scope="col" class="num">Database</th></tr>
-            </thead>
-            <tbody>
-              <tr class="crab-row"><th scope="row">Crab</th><td class="num">200,401</td><td class="num">18,367</td></tr>
-              <tr><th scope="row">webman <span class="faint">Workerman</span></th><td class="num">146,898</td><td class="num">8,314</td></tr>
-              <tr><th scope="row">Hyperf <span class="faint">Swoole</span></th><td class="num">97,048</td><td class="num">20,102</td></tr>
-              <tr><th scope="row">Symfony <span class="faint">FrankenPHP</span></th><td class="num">12,718</td><td class="num">7,442</td></tr>
-              <tr><th scope="row">Spiral <span class="faint">RoadRunner</span></th><td class="num">5,519</td><td class="num">3,654</td></tr>
-              <tr><th scope="row">Laravel <span class="faint">Octane</span></th><td class="num">4,106</td><td class="num">2,463</td></tr>
-              <tr><th scope="row">Tempest <span class="faint">FrankenPHP</span></th><td colspan="2" class="num faint">needs PHP 8.5</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="faint">Measured on one Apple M1 Pro with small, matched workloads. Not a universal ranking or a capacity estimate. <a href="https://github.com/crabphp/framework/blob/main/benchmarks/frameworks/README.md">Methodology and raw results <span aria-hidden="true">↗</span></a></p>
-      </section>
     </main>
 
     <footer class="site-footer">

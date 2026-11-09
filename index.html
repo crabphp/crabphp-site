@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111111">
-  <meta name="description" content="Crab is a minimal PHP framework for fast, explicit JSON APIs.">
-  <title>Crab — PHP for serious software</title>
+  <meta name="description" content="Crab is fast, easy PHP for long-lived APIs and services.">
+  <title>Crab — fast, easy PHP for APIs and services</title>
   <link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/crab.css">
@@ -18,7 +18,7 @@
       <nav aria-label="Primary navigation">
         <a href="/docs/">Docs</a>
         <a href="#benchmarks">Benchmarks</a>
-        <a href="https://github.com/crabphp/framework">GitHub</a>
+        <a href="https://github.com/crabphp/framework">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
 
@@ -37,15 +37,15 @@ php cua dev</code></pre>
         <dl class="defs">
           <dt>Fast</dt><dd>The application loads once and serves requests as a real server. No PHP-FPM, no bootstrapping on every request.</dd>
           <dt>Easy</dt><dd>Typed actions, named services, ordinary PHP. One way to do each thing keeps the important parts visible.</dd>
-          <dt>Complete</dt><dd>Routing, validation, databases, queues, scheduling, authentication, HTTP, streaming, and WebSockets on one small foundation.</dd>
+          <dt>Built-in</dt><dd>Routing, validation, databases, queues, scheduling, authentication, HTTP, streaming, and WebSockets on one small foundation.</dd>
         </dl>
       </section>
 
       <section class="section" aria-labelledby="benchmarks">
         <h2 id="benchmarks">Benchmarks</h2>
-        <p class="muted">Requests per second, median, 64 persistent connections.</p>
         <div class="table-wrap">
           <table>
+            <caption>Requests per second, median, with 64 persistent connections. Hello is a plain response; Database reads from a database.</caption>
             <thead>
               <tr><th scope="col">Framework</th><th scope="col" class="num">Hello</th><th scope="col" class="num">Database</th></tr>
             </thead>
@@ -64,10 +64,10 @@ php cua dev</code></pre>
       </section>
 
       <section class="section" aria-labelledby="deploy">
-        <h2 id="deploy">One command runs all of it</h2>
+        <h2 id="deploy">One command starts the application</h2>
         <p class="muted">HTTP, queue workers, and the scheduler start together. No Supervisor config, no systemd unit per worker, no crontab line. List the queue and the scheduler in <code>app.php</code>, then start.</p>
         <pre><code><span class="code-comment">$</span> php cua start --daemon
-Starting Shop server on http://127.0.0.1:8080
+Starting my-app server on http://127.0.0.1:8080
 
   Server    Workers  Runs
   http      2        http://127.0.0.1:8080
@@ -118,7 +118,7 @@ routes
         <dl class="defs">
           <dt>describe</dt><dd>The whole application in one read: routes and what each takes, middleware, commands, schedule, listeners, databases, settings. One thing per line, in few tokens. <code>--json</code> gives JSON Schema.</dd>
           <dt>AGENTS.md</dt><dd>Every new app ships with one: where things go, the rules a long-lived server needs, and how to check the work.</dd>
-          <dt>problem:</dt><dd><code>describe app</code> lists settings that do not fit and services that cannot be made, before <code>start</code> refuses them.</dd>
+          <dt>Preflight</dt><dd><code>describe app</code> lists settings that do not fit and services that cannot be made, before <code>start</code> refuses them.</dd>
           <dt>Markdown</dt><dd>The guide is plain Markdown, in <code>vendor/crabphp/framework/docs/</code> and at <a href="/llms.txt">/llms.txt</a>.</dd>
         </dl>
         <p><a href="/docs/console/#describing-the-application">Describing the application <span aria-hidden="true">→</span></a></p>

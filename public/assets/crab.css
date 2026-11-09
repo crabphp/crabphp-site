@@ -80,6 +80,7 @@ pre {
 }
 
 table { width: 100%; border-collapse: collapse; }
+caption { margin-bottom: var(--lh); color: var(--muted); text-align: left; }
 th, td { padding: 0 2ch calc(var(--lh) / 2) 0; text-align: left; vertical-align: top; }
 thead th { color: var(--faint); font-weight: 400; }
 tbody tr + tr > * { padding-top: calc(var(--lh) / 2); }
@@ -195,4 +196,5 @@ details[open] > summary::after { content: " −"; }
   .doc pre { font-size: 13px; }
   .pager { flex-direction: column; gap: calc(var(--lh) / 2); }
   .pager span:empty { display: none; }
+  main a, .site-footer a { display: inline-block; min-height: 28px; }
 }

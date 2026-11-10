@@ -28,6 +28,14 @@ The production files are written to `dist/` and can be deployed to Cloudflare Pa
 
 The framework repository remains the source of truth for technical documentation. The site repository owns the presentation, landing-page content, and design system.
 
+### Code highlighting
+
+Documentation code blocks and landing-page examples use the [Highlights HTML API](https://diffs.com/docs#highlights-html) from `@pierre/highlights`. Highlighting runs during rendering/building (and in Vite's development HTML hook); no highlighter JavaScript or WebAssembly is shipped to the browser.
+
+Use a language on Markdown fences, such as `php`, `sh`, or `json`. In `index.html`, use `<pre><code class="language-php">…</code></pre>` with HTML-escaped source, without manually adding token spans. Use `language-text` for terminal output. Missing or unsupported languages fall back to escaped plain text. Inline code and the mascot remain unchanged.
+
+The shared theme lives in `scripts/highlight.mjs`; its code-only palette is in `public/assets/crab.css`. Run `npm test` for highlighting regression tests.
+
 If the site repository is checked out alone, the sync script fetches documentation from `https://github.com/crabphp/framework` at `main`. For a pinned or private source, set `CRABPHP_FRAMEWORK_PATH`, `CRABPHP_FRAMEWORK_REPO`, and optionally `CRABPHP_FRAMEWORK_REF` before syncing. The default local layout is:
 
 ```text

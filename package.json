@@ -11,10 +11,13 @@
     "build": "npm run sync:docs && npm run render:docs && vite build",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler pages deploy dist --project-name crabphp-site",
-    "check": "npm run build"
+    "check": "npm test && npm run build",
+    "test": "node --test"
   },
   "devDependencies": {
+    "@pierre/highlights": "^0.5.0",
     "marked": "^15.0.12",
+    "parse5": "^8.1.1",
     "vite": "^6.1.0",
     "wrangler": "^4.158.0"
   }

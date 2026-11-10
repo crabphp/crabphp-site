@@ -107,8 +107,19 @@ hr::before { content: "~*~"; }
 .mascot .eyes { display: inline-block; position: relative; }
 .mascot .eyes::after { content: "███████"; position: absolute; inset: 0; opacity: 0; }
 
-.code-comment { color: var(--faint); }
-.code-keyword, .code-string { color: var(--amber); }
+/* Build-time Highlights markup uses these variables; no browser highlighter. */
+.highlights {
+  --code-background: var(--surface);
+  --code-foreground: var(--strong);
+  --code-comment: var(--faint);
+  --code-keyword: #ff678d;
+  --code-string: #5ecc71;
+  --code-number: #68cdf2;
+  --code-function: #9d6afb;
+  --code-type: #d568ea;
+  --code-variable: #ffa359;
+  --code-operator: #08c0ef;
+}
 
 .defs { display: grid; grid-template-columns: 16ch 1fr; gap: 0 2ch; margin: 0 0 var(--lh); }
 .defs dt { color: var(--strong); }

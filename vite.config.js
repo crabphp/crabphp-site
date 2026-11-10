@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { createReadStream, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { defineConfig } from 'vite';
+import { highlightCodeBlocks } from './scripts/highlight.mjs';
 
 // Same versioned stylesheet URL as scripts/render-docs.mjs writes into the docs pages.
 function versionedStylesheet() {
@@ -14,6 +15,13 @@ function versionedStylesheet() {
   };
 }
 
+function highlightedCodeExamples() {
+  return {
+    name: 'highlighted-code-examples',
+    transformIndexHtml: highlightCodeBlocks,
+  };
+}
+
 function generatedDirectoryPages() {
   return {
     name: 'generated-directory-pages',
@@ -22,7 +30,8 @@ function generatedDirectoryPages() {
         if (request.method !== 'GET' && request.method !== 'HEAD') return next();
 
         const pathname = new URL(request.url, 'http://localhost').pathname;
-        if (!pathname.endsWith('/')) return next();
+        // Let Vite transform the landing page (including syntax highlighting).
+        if (pathname === '/' || !pathname.endsWith('/')) return next();
 
         const publicFile = join(process.cwd(), 'public', pathname, 'index.html');
         const sourceFile = join(process.cwd(), pathname, 'index.html');
@@ -41,7 +50,7 @@ function generatedDirectoryPages() {
 export default defineConfig({
   root: '.',
   publicDir: 'public',
-  plugins: [generatedDirectoryPages(), versionedStylesheet()],
+  plugins: [generatedDirectoryPages(), highlightedCodeExamples(), versionedStylesheet()],
   build: {
     outDir: 'dist',
     emptyOutDir: true,

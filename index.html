@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111111">
-  <meta name="description" content="Crab is fast, easy PHP for long-lived APIs and services.">
-  <title>Crab — fast, easy PHP for APIs and services</title>
+  <meta name="description" content="Crab is fast, easy PHP for web apps, JSON APIs and services, with server-rendered views and components from Arc.">
+  <title>Crab — fast, easy PHP for web apps and APIs</title>
   <link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/crab.css">
@@ -26,8 +26,9 @@
       <pre class="mascot" role="img" aria-label="Cua, the Crab mascot: a small crab with its claws raised">▙▟▗▄▄▄▄▄▖▙▟
  ▝<span class="eyes">█▄███▄█</span>▘</pre>
       <h1>Make PHP great again <span class="cursor" aria-hidden="true">█</span></h1>
-      <p class="lede">Fast to run, easy to use, and small enough to understand. Crab gives long-lived PHP applications a clear foundation for APIs, services, and the work around them.</p>
-      <pre><code>composer create-project crabphp/crab my-app
+      <p class="lede">Fast to run, easy to use, and small enough to understand. Crab gives long-lived PHP applications a clear foundation for web apps, JSON APIs, and the work around them.</p>
+      <p class="muted">Build a regular server-rendered website too: <a href="/docs/views/">Arc adds HTML views, layouts and components</a>, with ordinary forms and no frontend framework required.</p>
+      <pre><code class="language-sh">composer create-project crabphp/crab my-app
 cd my-app
 php cua dev</code></pre>
       <p><a href="/docs/installation/">Read the documentation <span aria-hidden="true">→</span></a></p>
@@ -66,7 +67,7 @@ php cua dev</code></pre>
       <section class="section" aria-labelledby="deploy">
         <h2 id="deploy">One command starts the application</h2>
         <p class="muted">HTTP, queue workers, and the scheduler start together. No Supervisor config, no systemd unit per worker, no crontab line. List the queue and the scheduler in <code>app.php</code>, then start.</p>
-        <pre><code><span class="code-comment">$</span> php cua start --daemon
+        <pre><code class="language-text">$ php cua start --daemon
 Starting my-app server on http://127.0.0.1:8080
 
   Server    Workers  Runs
@@ -87,6 +88,7 @@ Starting my-app server on http://127.0.0.1:8080
           <li><a href="/docs/routing/">Routing</a> <span class="muted">typed parameters and groups</span></li>
           <li><a href="/docs/actions/">Actions</a> <span class="muted">classes that say what they need</span></li>
           <li><a href="/docs/validation/">Validation</a> <span class="muted">input checked before your action</span></li>
+          <li><a href="/docs/views/">Views with Arc</a> <span class="muted">HTML pages, layouts and components; an optional package</span></li>
           <li><a href="/docs/database/">Database</a> <span class="muted">SQLite and MySQL, async when needed</span></li>
           <li><a href="/docs/queues/">Queues</a> <span class="muted">durable work outside a request</span></li>
           <li><a href="/docs/ai/">AI applications</a> <span class="muted">streaming, runs, and actors</span></li>
@@ -97,18 +99,18 @@ Starting my-app server on http://127.0.0.1:8080
 
       <section class="section" aria-labelledby="code">
         <h2 id="code">A route is just a route</h2>
-        <pre><code><span class="code-comment">// routes/web.php</span>
-<span class="code-keyword">use</span> Crab\Route;
+        <pre><code class="language-php">// routes/web.php
+use Crab\Route;
 
-Route::get(<span class="code-string">'/hello/{name}'</span>, <span class="code-keyword">static function</span> (string $name): array {
-    <span class="code-keyword">return</span> [<span class="code-string">'hello'</span> =&gt; $name];
+Route::get('/hello/{name}', static function (string $name): array {
+    return ['hello' =&gt; $name];
 });</code></pre>
       </section>
 
       <section class="section" aria-labelledby="agents">
         <h2 id="agents">Written for agents too</h2>
         <p class="muted">Explicit types, no hidden state, one way to do each thing. The same things that make code easy for a person to read make it easy for a coding agent to get right.</p>
-        <pre><code><span class="code-comment">$</span> php cua describe routes
+        <pre><code class="language-text">$ php cua describe routes
 routes
   POST /orders -&gt; App\Actions\PlaceOrder via Crab\Auth\TokenAuth
     body { lines: Array&lt;{ productId: int; quantity?: int | null (minimum=1, maximum=20, default=1) }&gt; (minItems=1, maxItems=20) }

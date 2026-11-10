@@ -7,7 +7,7 @@ The site reads like a plain text file in a terminal: one font, one size, a singl
 ## Direction
 
 - One typeface (JetBrains Mono), one size, one line height.
-- Dark background, white text, amber for links and emphasis.
+- Dark background, white text, amber for links and emphasis. Code blocks are the exception: syntax highlighting uses a small palette based on Pierre Dark.
 - Headings are uppercase bold at body size, prefixed with `#`, `##`, `###`.
 - No images, icons, gradients, shadows, cards, borders around content, or rounded corners.
 - No frontend framework. Semantic HTML and one stylesheet: `public/assets/crab.css`.
@@ -28,7 +28,7 @@ The site reads like a plain text file in a terminal: one font, one size, a singl
 --measure: 680px;
 ```
 
-`--faint` is the lowest opacity allowed for text, which keeps contrast at or above WCAG AA. Do not add hues: meaning comes from words and structure.
+`--faint` is the lowest opacity allowed for text, which keeps contrast at or above WCAG AA. Outside syntax-highlighted code, do not add hues: meaning comes from words and structure.
 
 ## Rhythm
 
@@ -45,7 +45,9 @@ The page has `40px` padding (`24px 16px` on small screens) and a centered max-wi
 - Links: amber, underlined on hover. External links end with `↗`, directional links with `→` or `←`, both wrapped in `aria-hidden="true"`.
 - Lists use `- ` markers in faint white.
 - Inline code is white with no background. Code blocks use `--surface` and the same size as body text.
-- Syntax colour is sparse: amber for keywords and strings, faint for comments, white for everything else.
+- Syntax highlighting uses the `@pierre/highlights` HTML API at build time, shared by Markdown docs and landing-page `<pre><code class="language-…">` examples. No highlighter JavaScript or WebAssembly is sent to the browser.
+- Code-only palette, based on Pierre Dark: pink `#ff678d` keywords and tags, green `#5ecc71` strings, cyan `#68cdf2` numbers and constants, purple `#9d6afb` functions, magenta `#d568ea` types, orange `#ffa359` variables and properties, and cyan `#08c0ef` operators and escapes. Comments use `--faint`; punctuation and ordinary text stay white. The block background remains `--surface`. These colours are CSS variables scoped to `.highlights`.
+- Plain text, terminal output, and unsupported languages render safely without syntax colours. Inline code and the mascot are not highlighted.
 - Tables have no rules. Headers are faint, numbers are right-aligned with tabular figures.
 - Blockquotes (notes) have a 1px amber left rule.
 - `hr` renders as `~*~`.
@@ -82,4 +84,5 @@ Direct, calm, and specific. Short sentences. Explain why, not only what. No hype
 - `public/assets/crab.css` is the only stylesheet; `public/assets/fonts/` holds the fonts and licence. Both are copied as they are and cached forever; pages link the stylesheet as `crab.css?v=<hash of its content>` (written by `render-docs.mjs` and by a Vite hook for `index.html`), so a change gets a new URL.
 - `scripts/sync-docs.mjs` copies Markdown from the framework repo into `public/content/docs/` (generated).
 - `scripts/render-docs.mjs` renders it into `public/docs/` (generated), with GitHub-style heading ids so the Markdown's anchors work. It also writes `public/llms.txt` (an index of the Markdown pages for agents) and `public/llms-full.txt` (the whole guide in one file), both generated.
+- `scripts/highlight.mjs` supplies the shared highlighter. The Markdown renderer calls it for fenced and indented blocks; a Vite HTML hook highlights language-tagged landing-page blocks in development and production.
 - Update this document before adding a colour, a size, or a new layout pattern.

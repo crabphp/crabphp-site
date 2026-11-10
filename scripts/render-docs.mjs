@@ -3,6 +3,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { marked } from 'marked';
+import { highlightCode } from './highlight.mjs';
 
 const siteRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 // A stylesheet URL that changes with its content, so new pages never get an old cached copy.
@@ -18,7 +19,8 @@ const escapeHtml = (value) => value
 
 const pageUrl = (file, anchor = '') => `/docs/${file.replace(/\.md$/, '')}/${anchor}`;
 
-const rewriteLinks = (html) => html.replace(/href="([a-z0-9-]+)\.md(#[^"]*)?"/g, (_, file, anchor = '') => `href="${pageUrl(file, anchor)}"`);
+// Only rewrite rendered anchors, never href="…" text inside a code example.
+const rewriteLinks = (html) => html.replace(/<a href="([a-z0-9-]+)\.md(#[^"]*)?"/g, (_, file, anchor = '') => `<a href="${pageUrl(file, anchor)}"`);
 
 // GitHub-style heading ids, so the Markdown's own #anchors work on the site.
 let seenSlugs = new Map();
@@ -30,6 +32,9 @@ const slug = (text) => {
 };
 marked.use({
   renderer: {
+    code({ text, lang }) {
+      return `${highlightCode(text.replace(/\n$/, '') + '\n', lang)}\n`;
+    },
     heading({ tokens, depth }) {
       const html = this.parser.parseInline(tokens);
       return `<h${depth} id="${slug(html)}">${html}</h${depth}>\n`;
@@ -60,7 +65,7 @@ const renderPage = (markdown) => {
 };
 
 // `width` is the class that gives the header the width of the content under it.
-const shell = (title, body, width, description = 'Crab framework documentation.') => `<!doctype html>
+const shell = (title, body, width, description = 'Crab framework documentation for PHP web applications and JSON APIs.') => `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -112,7 +117,7 @@ const nav = (current = null) => groups.map(({ title, pages }) => `<div><p>${esca
 const index = groups.map(({ title, pages }) => `<h2>${escapeHtml(title)}</h2><ul>${pages.map((page) => `<li><a href="${page.external ? page.href : pageUrl(page.file)}">${escapeHtml(page.title)}</a>${page.external ? ' <span aria-hidden="true">↗</span>' : ''}</li>`).join('')}</ul>`).join('');
 const docsIndexBody = `<main id="main" class="page">
   <h1>Documentation</h1>
-  <p class="lede">Crab is a minimal PHP framework for JSON APIs. It gives a long-lived application routing, typed actions, validation, databases, queues, authentication, streaming, and the tools around them. Start with installation, then follow the links as your service grows.</p>
+  <p class="lede">Crab is a minimal PHP framework for web applications and JSON APIs. It gives a long-lived application routing, typed actions, validation, databases, queues, authentication and streaming. Arc adds server-rendered HTML views, layouts and components as an optional package. Start with installation, then follow the links as your application grows.</p>
   ${index}
 </main>`;
 await writeFile(join(publicDocsRoot, 'index.html'), shell('Documentation', docsIndexBody, 'page'));
@@ -140,7 +145,7 @@ const siteUrl = (process.env.SITE_URL || 'https://crab.daudau.cc').replace(/\/$/
 const llmsIndex = [
   '# Crab',
   '',
-  '> A minimal PHP framework for JSON APIs. The application runs as a long-lived server: explicit types, no hidden state, one way to do each thing.',
+  '> A minimal PHP framework for web applications and JSON APIs, with server-rendered HTML views and components through the optional Arc package. The application runs as a long-lived server: explicit types, no hidden state, one way to do each thing.',
   '',
   'In a Crab application, run `php cua describe` to read every route, command, scheduled task, listener, database and setting before reading files (`--json` for JSON Schema). The app\'s `AGENTS.md` has the conventions, and the guide is also in `vendor/crabphp/framework/docs/`.',
   '',

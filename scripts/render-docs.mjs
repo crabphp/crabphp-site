@@ -59,7 +59,8 @@ const renderPage = (markdown) => {
   return `${title}<aside class="toc-rail"><details class="toc" data-collapse open><summary>On this page</summary>${toc}</details></aside>${collapseScript}${rest}`;
 };
 
-const shell = (title, body, description = 'Crab framework documentation.') => `<!doctype html>
+// `width` is the class that gives the header the width of the content under it.
+const shell = (title, body, width, description = 'Crab framework documentation.') => `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -73,7 +74,7 @@ const shell = (title, body, description = 'Crab framework documentation.') => `<
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
+  <header class="site-header ${width}">
     <a class="wordmark" href="/" aria-label="Crab home">crab<span>.</span></a>
     <nav aria-label="Site navigation"><a href="/">Home</a><a href="/docs/">Docs</a><a href="https://github.com/crabphp/framework">GitHub <span aria-hidden="true">↗</span></a></nav>
   </header>
@@ -114,7 +115,7 @@ const docsIndexBody = `<main id="main" class="page">
   <p class="lede">Crab is a minimal PHP framework for JSON APIs. It gives a long-lived application routing, typed actions, validation, databases, queues, authentication, streaming, and the tools around them. Start with installation, then follow the links as your service grows.</p>
   ${index}
 </main>`;
-await writeFile(join(publicDocsRoot, 'index.html'), shell('Documentation', docsIndexBody));
+await writeFile(join(publicDocsRoot, 'index.html'), shell('Documentation', docsIndexBody, 'page'));
 
 const localPages = groups.flatMap((group) => group.pages).filter((page) => !page.external);
 for (const [position, page] of localPages.entries()) {
@@ -131,7 +132,7 @@ for (const [position, page] of localPages.entries()) {
   <main id="main" class="doc">${renderPage(markdown)}${pager}</main>
 </div>`;
   await mkdir(join(publicDocsRoot, file), { recursive: true });
-  await writeFile(join(publicDocsRoot, file, 'index.html'), shell(page.title, html));
+  await writeFile(join(publicDocsRoot, file, 'index.html'), shell(page.title, html, 'docs-width'));
 }
 
 const siteUrl = (process.env.SITE_URL || 'https://crab.daudau.cc').replace(/\/$/, '');

@@ -53,7 +53,7 @@ The page has `40px` padding (`24px 16px` on small screens) and a centered max-wi
 
 ## Components
 
-- Header: wordmark `crab.` and a row of text links.
+- Header: wordmark `crab.` and a row of text links. It is as wide as the content under it: `--measure` on the landing page and the docs index, the docs columns on a docs page.
 - Definition list `.defs`: term column plus description, for principles and commands.
 - Benchmark table.
 - Docs: a `22ch` sticky navigation column and a `--measure` content column. The columns are centered in the page together, not set against its left edge. Group labels are faint text, not headings. The current page has `aria-current="page"`, shows in amber, and is prefixed with `> `.

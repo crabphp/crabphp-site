@@ -85,3 +85,5 @@ python3 ../benchmarks/update-site.py ../benchmarks/results/<timestamp> --site .
 ```
 
 The updater verifies every retained wrk result and recomputes the medians. It rejects smoke runs, missing trials and any errors. Keep the date, runtime versions, machine limitations and raw-results links with the table.
+
+Vite adds full-width animated tracks below the Hello numbers through `scripts/benchmark-pings.mjs`, deriving speeds directly from that column. Framework names and Database results stay free of animation. The fastest result takes one second per direction; the others take proportionally longer. The same transform adds the short motion note, so regenerating the benchmark section preserves the feature without manual markup. There are no pause controls. Motion is CSS-only and respects reduced-motion preferences.

@@ -3,6 +3,7 @@ import { createReadStream, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { defineConfig } from 'vite';
 import { highlightCodeBlocks } from './scripts/highlight.mjs';
+import { addBenchmarkPings } from './scripts/benchmark-pings.mjs';
 
 // Same versioned stylesheet URL as scripts/render-docs.mjs writes into the docs pages.
 function versionedStylesheet() {
@@ -19,6 +20,13 @@ function highlightedCodeExamples() {
   return {
     name: 'highlighted-code-examples',
     transformIndexHtml: highlightCodeBlocks,
+  };
+}
+
+function benchmarkPings() {
+  return {
+    name: 'benchmark-pings',
+    transformIndexHtml: addBenchmarkPings,
   };
 }
 
@@ -50,7 +58,7 @@ function generatedDirectoryPages() {
 export default defineConfig({
   root: '.',
   publicDir: 'public',
-  plugins: [generatedDirectoryPages(), highlightedCodeExamples(), versionedStylesheet()],
+  plugins: [generatedDirectoryPages(), highlightedCodeExamples(), benchmarkPings(), versionedStylesheet()],
   build: {
     outDir: 'dist',
     emptyOutDir: true,

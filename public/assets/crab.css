@@ -135,6 +135,24 @@ hr::before { content: "~*~"; }
 .table-wrap table { margin: 0; table-layout: fixed; }
 .table-wrap th:first-child { width: 46%; }
 .table-wrap .num { white-space: nowrap; }
+.table-wrap th, .table-wrap td { border-width: 0 0 1px; }
+.table-wrap tr > :first-child { padding-left: 0; }
+.table-wrap tr > :last-child { padding-right: 0; }
+.table-wrap tbody th .faint { display: block; font-weight: 400; }
+
+.benchmark-ping {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: var(--lh);
+  color: var(--faint);
+}
+.benchmark-ping::before { content: ""; position: absolute; inset-inline: 0; top: calc(50% - .5px); height: 1px; background: var(--line); }
+/* The runner's full width is the square's travel distance, excluding its size. */
+.benchmark-ping > span { display: block; position: relative; width: calc(100% - 6px); height: 100%; }
+.benchmark-ping > span::before { content: ""; position: absolute; left: 0; top: calc(50% - 3px); width: 6px; height: 6px; background: currentColor; }
+.crab-row .benchmark-ping { color: var(--amber); }
+.benchmark-explainer { display: none; color: var(--faint); }
 
 .site-footer { margin-top: calc(var(--lh) * 4); color: var(--faint); }
 
@@ -168,7 +186,10 @@ details[open] > summary::after { content: " −"; }
   html { scroll-behavior: smooth; }
   .cursor { animation: blink 1s steps(1) infinite; }
   .mascot .eyes::after { animation: shut 6s steps(1) 1s infinite; }
+  .benchmark-ping > span { animation: benchmark-ping var(--hello-duration) linear infinite alternate; }
+  .benchmark-explainer { display: block; }
 }
+@keyframes benchmark-ping { from { transform: translateX(0); } to { transform: translateX(100%); } }
 @keyframes blink { 50% { opacity: 0; } }
 /* Twice in quick succession, then a long pause. */
 @keyframes shut { 0%, 4%, 7%, 100% { opacity: 0; } 2%, 5% { opacity: 1; } }

@@ -132,7 +132,9 @@ hr::before { content: "~*~"; }
 .num { text-align: right; font-variant-numeric: tabular-nums; }
 .crab-row > * { color: var(--amber); }
 .table-wrap { overflow-x: auto; margin-bottom: var(--lh); }
-.table-wrap table { margin: 0; white-space: nowrap; }
+.table-wrap table { margin: 0; table-layout: fixed; }
+.table-wrap th:first-child { width: 46%; }
+.table-wrap .num { white-space: nowrap; }
 
 .site-footer { margin-top: calc(var(--lh) * 4); color: var(--faint); }
 
@@ -224,6 +226,8 @@ details[open] > summary::after { content: " −"; }
   /* Code runs to the screen's edges, so long lines get the full width to scroll in. */
   pre, .doc table { margin-inline: calc(var(--pad-x) * -1); padding-inline: var(--pad-x); }
   .doc pre { font-size: 13px; }
+  .table-wrap th, .table-wrap td { padding-inline: .5ch; }
+  .table-wrap th .faint { display: block; font-size: 12px; }
   .pager { flex-direction: column; gap: calc(var(--lh) / 2); }
   .pager span:empty { display: none; }
   main a, .site-footer a { display: inline-block; min-height: 28px; }

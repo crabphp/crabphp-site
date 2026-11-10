@@ -81,9 +81,13 @@ pre {
 
 table { width: 100%; border-collapse: collapse; }
 caption { margin-bottom: var(--lh); color: var(--muted); text-align: left; }
-th, td { padding: 0 2ch calc(var(--lh) / 2) 0; text-align: left; vertical-align: top; }
+th, td {
+  border: 1px solid var(--line);
+  padding: calc(var(--lh) / 2) 2ch;
+  text-align: left;
+  vertical-align: top;
+}
 thead th { color: var(--faint); font-weight: 400; }
-tbody tr + tr > * { padding-top: calc(var(--lh) / 2); }
 
 blockquote { padding-left: 2ch; border-left: 1px solid var(--amber); color: var(--muted); }
 blockquote p:last-child { margin-bottom: 0; }
@@ -126,7 +130,6 @@ hr::before { content: "~*~"; }
 .defs dd { margin: 0; color: var(--muted); }
 
 .num { text-align: right; font-variant-numeric: tabular-nums; }
-th.num, td.num { padding-right: 0; padding-left: 2ch; }
 .crab-row > * { color: var(--amber); }
 .table-wrap { overflow-x: auto; margin-bottom: var(--lh); }
 .table-wrap table { margin: 0; white-space: nowrap; }

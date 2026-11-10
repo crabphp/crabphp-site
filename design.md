@@ -9,7 +9,7 @@ The site reads like a plain text file in a terminal: one font, one size, a singl
 - One typeface (JetBrains Mono), one size, one line height.
 - Dark background, white text, amber for links and emphasis. Code blocks are the exception: syntax highlighting uses a small palette based on Pierre Dark.
 - Headings are uppercase bold at body size, prefixed with `#`, `##`, `###`.
-- No images, icons, gradients, shadows, cards, borders around content, or rounded corners.
+- No images, icons, gradients, shadows, cards, or rounded corners. Borders are reserved for thin table grids and blockquote rules.
 - No frontend framework. Semantic HTML and one stylesheet: `public/assets/crab.css`.
 - No JavaScript needed for anything.
 
@@ -48,7 +48,7 @@ The page has `40px` padding (`24px 16px` on small screens) and a centered max-wi
 - Syntax highlighting uses the `@pierre/highlights` HTML API at build time, shared by Markdown docs and landing-page `<pre><code class="language-…">` examples. No highlighter JavaScript or WebAssembly is sent to the browser.
 - Code-only palette, based on Pierre Dark: pink `#ff678d` keywords and tags, green `#5ecc71` strings, cyan `#68cdf2` numbers and constants, purple `#9d6afb` functions, magenta `#d568ea` types, orange `#ffa359` variables and properties, and cyan `#08c0ef` operators and escapes. Comments use `--faint`; punctuation and ordinary text stay white. The block background remains `--surface`. These colours are CSS variables scoped to `.highlights`.
 - Plain text, terminal output, and unsupported languages render safely without syntax colours. Inline code and the mascot are not highlighted.
-- Tables have no rules. Headers are faint, numbers are right-aligned with tabular figures.
+- Tables use a collapsed 1px grid in `--line`, with half a line of vertical padding and `2ch` horizontal padding in every cell. Headers are faint, numbers are right-aligned with tabular figures. Captions remain outside the grid.
 - Blockquotes (notes) have a 1px amber left rule.
 - `hr` renders as `~*~`.
 - The landing heading may end in a blinking amber cursor `█`; it only blinks when reduced motion is not requested.

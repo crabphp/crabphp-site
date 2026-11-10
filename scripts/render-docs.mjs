@@ -48,7 +48,7 @@ const render = (markdown) => {
 const collapseScript = `<script>(() => { const narrow = matchMedia('(max-width: 860px)'); const sync = () => { for (const d of document.querySelectorAll('details[data-collapse]')) d.open = !narrow.matches; }; sync(); narrow.addEventListener('change', sync); })();</script>`;
 
 // Every page opens with "# Title" and a list of links to its sections.
-// That list becomes a collapsible "On this page".
+// That list becomes a collapsible "On this page", which a wide screen keeps in a column on the right.
 const renderPage = (markdown) => {
   const opening = markdown.match(/^(# .+\n)\s*\n((?:[ \t]*- \[.+\n)+)/);
   if (!opening) return collapseScript + render(markdown);
@@ -56,7 +56,7 @@ const renderPage = (markdown) => {
   const title = marked.parse(opening[1]);
   const toc = rewriteLinks(marked.parse(opening[2]));
   const rest = rewriteLinks(marked.parse(markdown.slice(opening[0].length)));
-  return `${title}<details class="toc" data-collapse open><summary>On this page</summary>${toc}</details>${collapseScript}${rest}`;
+  return `${title}<aside class="toc-rail"><details class="toc" data-collapse open><summary>On this page</summary>${toc}</details></aside>${collapseScript}${rest}`;
 };
 
 const shell = (title, body, description = 'Crab framework documentation.') => `<!doctype html>

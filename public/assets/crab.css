@@ -123,8 +123,9 @@ th.num, td.num { padding-right: 0; padding-left: 2ch; }
 .site-footer { margin-top: calc(var(--lh) * 4); color: var(--faint); }
 
 /* Documentation */
-.docs { display: grid; grid-template-columns: 22ch minmax(0, var(--measure)); gap: 0 6ch; }
+.docs { display: grid; grid-template-columns: 22ch minmax(0, var(--measure)); gap: 0 6ch; justify-content: center; }
 .docs-nav { position: sticky; top: 40px; align-self: start; max-height: calc(100vh - 80px); overflow-y: auto; }
+.docs-nav, .toc { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
 .docs-nav > summary { display: none; }
 .docs-nav p { margin: 0; color: var(--faint); }
 .docs-nav ul { list-style: none; padding: 0; }
@@ -153,6 +154,18 @@ details[open] > summary::after { content: " −"; }
 @keyframes blink { 50% { opacity: 0; } }
 /* Twice in quick succession, then a long pause. */
 @keyframes shut { 0%, 4%, 7%, 100% { opacity: 0; } 2%, 5% { opacity: 1; } }
+
+/* Wide screens: "On this page" leaves the text for a third column and stays in view. */
+@media (min-width: 1280px) {
+  .docs { grid-template-columns: 22ch minmax(0, var(--measure)) 24ch; }
+  .doc { position: relative; }
+  .toc-rail { position: absolute; top: 0; bottom: 0; left: calc(100% + 6ch); width: 24ch; }
+  .toc { position: sticky; top: 40px; max-height: calc(100vh - 80px); overflow-y: auto; margin: 0; }
+  .toc > summary { pointer-events: none; }
+  .toc[open] > summary::after { content: none; }
+  .toc a { color: var(--muted); }
+  .toc a:hover { color: var(--amber); }
+}
 
 /* Narrow screens: the docs nav becomes a bar that stays at the top and opens into a menu. */
 @media (max-width: 860px) {

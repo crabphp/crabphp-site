@@ -73,3 +73,15 @@ The command uses `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` from the env
 - `CLOUDFLARE_ACCOUNT_ID`
 
 The Cloudflare token only needs Pages deployment permission for this project/account. DNS and custom-domain configuration are separate operations and should not be done by the deployment workflow.
+
+## Benchmark data
+
+The landing-page table is generated from the independent public [crabphp/benchmarks](https://github.com/crabphp/benchmarks) repository. The current reference run is `20261110T104256Z`: PHP 8.5.12, all seven frameworks at their recorded stable releases, five trials per case, and zero errors.
+
+To update it from a new reference run:
+
+```sh
+python3 ../benchmarks/update-site.py ../benchmarks/results/<timestamp> --site .
+```
+
+The updater verifies every retained wrk result and recomputes the medians. It rejects smoke runs, missing trials and any errors. Keep the date, runtime versions, machine limitations and raw-results links with the table.

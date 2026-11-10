@@ -46,22 +46,23 @@ php cua dev</code></pre>
         <h2 id="benchmarks">Benchmarks</h2>
         <div class="table-wrap">
           <table>
-            <caption>Requests per second, median, with 64 persistent connections. Hello is a plain response; Database reads from a database.</caption>
+            <caption>Requests per second, median of five 15-second trials, with 64 persistent connections. PHP 8.5.12, JIT off, two application workers. Hello returns JSON; Database reads one MySQL row.</caption>
             <thead>
               <tr><th scope="col">Framework</th><th scope="col" class="num">Hello</th><th scope="col" class="num">Database</th></tr>
             </thead>
             <tbody>
-              <tr class="crab-row"><th scope="row">Crab</th><td class="num">200,401</td><td class="num">18,367</td></tr>
-              <tr><th scope="row">webman <span class="faint">Workerman</span></th><td class="num">146,898</td><td class="num">8,314</td></tr>
-              <tr><th scope="row">Hyperf <span class="faint">Swoole</span></th><td class="num">97,048</td><td class="num">20,102</td></tr>
-              <tr><th scope="row">Symfony <span class="faint">FrankenPHP</span></th><td class="num">12,718</td><td class="num">7,442</td></tr>
-              <tr><th scope="row">Spiral <span class="faint">RoadRunner</span></th><td class="num">5,519</td><td class="num">3,654</td></tr>
-              <tr><th scope="row">Laravel <span class="faint">Octane</span></th><td class="num">4,106</td><td class="num">2,463</td></tr>
-              <tr><th scope="row">Tempest <span class="faint">FrankenPHP</span></th><td colspan="2" class="num faint">needs PHP 8.5</td></tr>
+              <tr class="crab-row"><th scope="row">Crab 0.6.4 <span class="faint">Native server</span></th><td class="num" title="Trial range: 106,016–110,128 requests/s">108,522</td><td class="num" title="Trial range: 19,833–20,566 requests/s">20,240</td></tr>
+              <tr><th scope="row">webman 2.2.5 <span class="faint">Workerman</span></th><td class="num" title="Trial range: 72,391–74,827 requests/s">73,282</td><td class="num" title="Trial range: 8,165–8,481 requests/s">8,301</td></tr>
+              <tr><th scope="row">Hyperf 3.2.0 <span class="faint">Swoole</span></th><td class="num" title="Trial range: 40,872–41,887 requests/s">41,652</td><td class="num" title="Trial range: 9,299–9,448 requests/s">9,380</td></tr>
+              <tr><th scope="row">Symfony 8.1.11 <span class="faint">FrankenPHP</span></th><td class="num" title="Trial range: 5,954–6,139 requests/s">6,114</td><td class="num" title="Trial range: 1,920–4,636 requests/s">3,540</td></tr>
+              <tr><th scope="row">Spiral 3.18.2 <span class="faint">RoadRunner</span></th><td class="num" title="Trial range: 3,083–3,251 requests/s">3,125</td><td class="num" title="Trial range: 2,401–2,535 requests/s">2,517</td></tr>
+              <tr><th scope="row">Laravel 13.40.0 <span class="faint">Octane · FrankenPHP</span></th><td class="num" title="Trial range: 2,121–2,213 requests/s">2,179</td><td class="num" title="Trial range: 1,571–1,622 requests/s">1,589</td></tr>
+              <tr><th scope="row">Tempest 3.21.0 <span class="faint">FrankenPHP</span></th><td class="num" title="Trial range: 987–997 requests/s">991</td><td class="num" title="Trial range: 888–909 requests/s">904</td></tr>
             </tbody>
           </table>
         </div>
-        <p class="faint">Measured on one Apple M1 Pro with small, matched workloads. Not a universal ranking or a capacity estimate. <a href="https://github.com/crabphp/framework/blob/main/benchmarks/frameworks/README.md">Methodology and raw results <span aria-hidden="true">↗</span></a></p>
+        <p class="faint">Measured 2026-11-10 on a shared Linux x86_64 machine with 6 logical CPUs, using Docker. Each application has the same 2-CPU quota and 2 GiB limit; CPU cores are shared. Zero errors across all measured trials and warmups. Small synthetic workloads, not a universal ranking or a capacity estimate. <a href="https://github.com/crabphp/benchmarks/tree/main/results/20261110T104256Z">Raw results and trial ranges <span aria-hidden="true">↗</span></a> · <a href="https://github.com/crabphp/benchmarks">Methodology and one-command reproduction <span aria-hidden="true">↗</span></a></p>
+        <p class="faint">Symfony's database trials ranged from 1,920 to 4,636 requests/s. Its median should be read alongside that variability.</p>
       </section>
 
       <section class="section" aria-labelledby="deploy">

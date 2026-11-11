@@ -2,6 +2,7 @@ node_modules/
 dist/
 public/content/
 public/docs/
+public/design/
 public/robots.txt
 public/sitemap.xml
 public/llms.txt

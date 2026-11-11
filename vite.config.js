@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { createReadStream, existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import { highlightCodeBlocks } from './scripts/highlight.mjs';
 import { addBenchmarkPings } from './scripts/benchmark-pings.mjs';
@@ -30,27 +30,35 @@ function benchmarkPings() {
   };
 }
 
-function generatedDirectoryPages() {
+export function generatedDirectoryPages() {
+  const middleware = (roots) => (request, response, next) => {
+    if (request.method !== 'GET' && request.method !== 'HEAD') return next();
+
+    const url = new URL(request.url, 'http://localhost');
+    const { pathname } = url;
+    // Let Vite transform the landing page (including syntax highlighting).
+    if (pathname === '/') return next();
+
+    const file = roots.map((root) => join(root, pathname, 'index.html')).find(existsSync);
+    if (!file) return next();
+    if (!pathname.endsWith('/')) {
+      response.statusCode = 301;
+      response.setHeader('Location', `${pathname}/${url.search}`);
+      return response.end();
+    }
+
+    response.statusCode = 200;
+    response.setHeader('Content-Type', 'text/html; charset=UTF-8');
+    if (request.method === 'HEAD') return response.end();
+    createReadStream(file).pipe(response);
+  };
   return {
     name: 'generated-directory-pages',
     configureServer(server) {
-      server.middlewares.use((request, response, next) => {
-        if (request.method !== 'GET' && request.method !== 'HEAD') return next();
-
-        const pathname = new URL(request.url, 'http://localhost').pathname;
-        // Let Vite transform the landing page (including syntax highlighting).
-        if (pathname === '/' || !pathname.endsWith('/')) return next();
-
-        const publicFile = join(process.cwd(), 'public', pathname, 'index.html');
-        const sourceFile = join(process.cwd(), pathname, 'index.html');
-        const file = existsSync(publicFile) ? publicFile : sourceFile;
-        if (!existsSync(file)) return next();
-
-        response.statusCode = 200;
-        response.setHeader('Content-Type', 'text/html; charset=UTF-8');
-        if (request.method === 'HEAD') return response.end();
-        createReadStream(file).pipe(response);
-      });
+      server.middlewares.use(middleware([server.config.publicDir, server.config.root]));
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(middleware([resolve(server.config.root, server.config.build.outDir)]));
     },
   };
 }

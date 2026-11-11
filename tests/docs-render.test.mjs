@@ -21,7 +21,7 @@ test('documentation renders highlighted blocks without changing source or code-l
   for (const directory of ['scripts', 'public/assets', 'public/content/docs']) {
     await mkdir(join(root, directory), { recursive: true });
   }
-  for (const file of ['scripts/render-docs.mjs', 'scripts/highlight.mjs', 'public/assets/crab.css']) {
+  for (const file of ['scripts/render-docs.mjs', 'scripts/page.mjs', 'scripts/highlight.mjs', 'public/assets/crab.css']) {
     await copyFile(new URL(`../${file}`, import.meta.url), join(root, file));
   }
   await symlink(fileURLToPath(new URL('../node_modules', import.meta.url)), join(root, 'node_modules'), 'dir');
@@ -47,4 +47,12 @@ test('documentation renders highlighted blocks without changing source or code-l
   assert.equal(findAll(code[2], 'span').length, 0, 'Terminal output is not coloured');
   assert.equal(findAll(code[3], 'span').length, 0, 'Unknown languages stay plain');
   assert.equal(await readFile(join(root, 'public/llms-full.txt'), 'utf8'), `${markdown.trim()}\n`);
+  const index = await readFile(join(root, 'public/docs/index.html'), 'utf8');
+  for (const page of [html, index]) {
+    const footer = findAll(parseFragment(page), 'footer')[0];
+    assert.ok(footer, 'Documentation pages share the site footer');
+    const design = findAll(footer, 'a').find((node) => node.attrs.some(({ name, value }) => name === 'href' && value === '/design/'));
+    assert.equal(textContent(design), 'Design');
+  }
+  assert.match(await readFile(join(root, 'public/sitemap.xml'), 'utf8'), /\/design\/<\/loc>/);
 });

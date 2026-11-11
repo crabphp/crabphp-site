@@ -5,10 +5,11 @@
   "description": "The CrabPHP public website and documentation.",
   "type": "module",
   "scripts": {
-    "dev": "npm run sync:docs && npm run render:docs && vite",
+    "dev": "npm run sync:docs && npm run render:docs && npm run render:design && vite",
     "sync:docs": "node scripts/sync-docs.mjs",
     "render:docs": "node scripts/render-docs.mjs",
-    "build": "npm run sync:docs && npm run render:docs && vite build",
+    "render:design": "node scripts/render-design.mjs",
+    "build": "npm run sync:docs && npm run render:docs && npm run render:design && vite build",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler pages deploy dist --project-name crabphp-site",
     "check": "npm test && npm run build",

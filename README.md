@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-Open <http://localhost:5173>. Vite syncs and statically renders the framework documentation before starting, then serves the same directory structure used by production.
+Open <http://localhost:5173>. Vite syncs and statically renders the framework documentation and design reference before starting, then serves the same directory structure used by production.
 
 ## Build
 
@@ -43,6 +43,20 @@ crabphp/
 ├── framework/
 └── crabphp-site/
 ```
+
+## Design system
+
+Open `/design/` (or use the **Design** footer link) to see the design rules and live specimens: typography, emphasis, lists, definitions, highlighted code, tables, notes, disclosures, navigation and motion.
+
+`design.md` is the single source for the page's content and specimens. The page uses the actual `public/assets/crab.css`, and its token table is read directly from that stylesheet. The shared renderer in `scripts/page.mjs` provides the same HTML shell, footer and build-time highlighting as the documentation. No second theme or browser JavaScript is shipped.
+
+Both `npm run dev` and `npm run build` generate `public/design/index.html` and an exact Markdown copy at `/content/design.md`. These files are ignored by Git; edit the source, not the generated output. To refresh after an edit during development:
+
+```sh
+npm run render:design
+```
+
+The production build copies the generated page into `dist/design/index.html`, includes it in the sitemap, and redirects `/design` to `/design/` on Cloudflare Pages.
 
 ## Cloudflare Pages
 

@@ -83,15 +83,20 @@ test('a package guide is a page of the Packages group, with its own source', asy
   );
   await writeFile(join(root, 'public/content/docs/example.md'), '# Example\n');
   await writeFile(join(root, 'public/content/docs/tide.md'), '# Tide by use case\n\nModels.\n');
+  await writeFile(join(root, 'public/content/docs/arc.md'), '# Arc\n\nTemplates.\n');
   await writeFile(
     join(root, 'public/content/packages.json'),
-    JSON.stringify([{ title: 'Models (Tide)', file: 'tide.md', source: 'https://github.com/crabphp/tide/blob/main/docs/guide.md' }]),
+    JSON.stringify([
+      { title: 'Models (Tide)', file: 'tide.md', repository: 'https://github.com/crabphp/tide', source: 'https://github.com/crabphp/tide/blob/main/docs/guide.md' },
+      { title: 'Arc (experimental)', file: 'arc.md', repository: 'https://github.com/crabphp/arc', source: 'https://github.com/crabphp/arc/blob/main/README.md' },
+    ]),
   );
   await exec(process.execPath, [join(root, 'scripts/render-docs.mjs')]);
 
   const html = await readFile(join(root, 'public/docs/tide/index.html'), 'utf8');
   assert.equal(html.split('<p>Packages</p>').length - 1, 1, 'one Packages group');
-  assert.match(html, /<p>Packages<\/p><ul><li><a href="\/docs\/tide\/" aria-current="page">Models \(Tide\)<\/a><\/li><li><a href="https:\/\/github.com\/crabphp\/arc">/);
+  assert.match(html, /<p>Packages<\/p><ul><li><a href="\/docs\/tide\/" aria-current="page">Models \(Tide\)<\/a><\/li><li><a href="\/docs\/arc\/">Arc \(experimental\)<\/a><\/li><\/ul>/);
+  assert.doesNotMatch(html, /href="https:\/\/github.com\/crabphp\/arc"/, 'the link out gives way to the page');
   assert.match(html, /<a href="https:\/\/github.com\/crabphp\/tide\/blob\/main\/docs\/guide.md">Source/);
   const index = await readFile(join(root, 'public/docs/index.html'), 'utf8');
   assert.match(index, /href="\/docs\/tide\/">Models \(Tide\)/);

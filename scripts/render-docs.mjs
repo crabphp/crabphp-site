@@ -29,7 +29,12 @@ const packagePages = JSON.parse(await readFile(join(siteRoot, 'public', 'content
 if (packagePages.length > 0) {
   const pages = packagePages.map((page) => ({ ...page, external: false }));
   const existing = groups.find((group) => group.title === 'Packages');
-  if (existing) existing.pages.unshift(...pages);
+  if (existing) {
+    // A package with a page here is no longer only a link out.
+    const here = new Set(packagePages.map((page) => page.repository));
+    existing.pages = existing.pages.filter((page) => !(page.external && here.has(page.href)));
+    existing.pages.unshift(...pages);
+  }
   else groups.push({ title: 'Packages', pages });
 }
 

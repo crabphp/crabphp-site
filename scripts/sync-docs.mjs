@@ -70,6 +70,13 @@ const packages = [
     repository: 'https://github.com/crabphp/tide',
     path: 'docs/guide.md',
   },
+  {
+    title: 'Arc (experimental)',
+    file: 'arc.md',
+    checkout: process.env.CRABPHP_ARC_PATH ? resolve(siteRoot, process.env.CRABPHP_ARC_PATH) : resolve(siteRoot, '..', 'arc'),
+    repository: 'https://github.com/crabphp/arc',
+    path: 'README.md',
+  },
 ];
 const packagePages = [];
 for (const item of packages) {
@@ -82,14 +89,18 @@ for (const item of packages) {
     if (!response.ok) throw new Error(`Could not fetch ${url} (${response.status}).`);
     markdown = await response.text();
   }
-  // A link to the package's own files leads to its repository.
+  // A link to the package's own files leads to its repository: from a guide in docs/ as ../FILE,
+  // from a README at the root as FILE.
+  if (!item.path.includes('/')) {
+    markdown = markdown.replace(/\]\((?!https?:|#|\/)([^)#]+\.md)(#[^)]*)?\)/g, (_, file, anchor = '') => `](${item.repository}/blob/main/${file}${anchor})`);
+  }
   markdown = markdown.replace(/\]\(\.\.\/([^)#]+)(#[^)]*)?\)/g, (_, file, anchor = '') => (
     file === 'README.md'
       ? `](${item.repository}${anchor || '#readme'})`
       : `](${item.repository}/blob/main/${file}${anchor})`
   ));
   await writeFile(join(destinationRoot, item.file), markdown);
-  packagePages.push({ title: item.title, file: item.file, source: `${item.repository}/blob/main/${item.path}` });
+  packagePages.push({ title: item.title, file: item.file, repository: item.repository, source: `${item.repository}/blob/main/${item.path}` });
 }
 await writeFile(join(publicRoot, 'packages.json'), JSON.stringify(packagePages, null, 2) + '\n');
 console.log(`Synced ${packagePages.length} package guide(s)`);

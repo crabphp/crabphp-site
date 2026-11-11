@@ -26,7 +26,7 @@ The production files are written to `dist/` and can be deployed to Cloudflare Pa
 
 `npm run sync:docs` copies Markdown documentation from the sibling `framework/docs/` directory into `public/content/docs/` and generates `public/content/docs.json` from `documentation.md`. `npm run render:docs` converts those Markdown pages into static HTML under `public/docs/`. The browser does not need a Markdown parser or documentation JavaScript in production.
 
-The framework repository remains the source of truth for technical documentation. The site repository owns the presentation, landing-page content, and design system.
+The framework repository remains the source of truth for technical documentation. The site repository owns its presentation, landing-page content and site-specific styling. The shared application design system lives in [crabphp/design](https://github.com/crabphp/design).
 
 ### Code highlighting
 
@@ -46,17 +46,22 @@ crabphp/
 
 ## Design system
 
-Open `/design/` (or use the **Design** footer link) to see the design rules and live specimens: typography, emphasis, lists, definitions, highlighted code, tables, notes, disclosures, navigation and motion.
+`/design/` is the landing page and interactive showcase from [crabphp/design](https://github.com/crabphp/design), copied unchanged—not a recreation of its documentation. Use the **Design** footer link to preview its tokens, components, charts and assembled application screens.
 
-`design.md` is the single source for the page's content and specimens. The page uses the actual `public/assets/crab.css`, and its token table is read directly from that stylesheet. The shared renderer in `scripts/page.mjs` provides the same HTML shell, footer and build-time highlighting as the documentation. No second theme or browser JavaScript is shipped.
+At build time, `npm run sync:design` copies that repo's `index.html`, `design.md`, licence, CSS, fonts, chart JavaScript and demo assets into `public/design/`. Their relative paths work under `/design/`. Vite copies them into `dist/design/`; the website does not fetch anything at runtime.
 
-Both `npm run dev` and `npm run build` generate `public/design/index.html` and an exact Markdown copy at `/content/design.md`. These files are ignored by Git; edit the source, not the generated output. To refresh after an edit during development:
+For local development, keep a sibling checkout:
 
 ```sh
-npm run render:design
+git clone https://github.com/crabphp/design.git ../design
+npm run dev
 ```
 
-The production build copies the generated page into `dist/design/index.html`, includes it in the sitemap, and redirects `/design` to `/design/` on Cloudflare Pages.
+Or set `CRABPHP_DESIGN_PATH` to an existing checkout. Both `npm run dev` and `npm run build` run the copy automatically. To refresh an already running preview after editing the source, run `npm run sync:design`.
+
+GitHub Actions checks out `crabphp/design` at `main` on every website build and supplies its path. Design repo changes appear on the **next website build**; use the deploy workflow's “Run workflow” button to refresh without a site code change. No cross-repo sync service is needed.
+
+`public/design/` is generated and ignored by Git. Make design changes in `crabphp/design`, not in the copied files or this repo's site-specific `design.md`. The sitemap includes `/design/`, and Cloudflare Pages redirects `/design` to `/design/`.
 
 ## Cloudflare Pages
 

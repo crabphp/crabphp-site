@@ -9,4 +9,5 @@ public/llms.txt
 public/llms-full.txt
 .env
 .tmp/
+.design-source/
 .DS_Store

@@ -24,6 +24,15 @@ for (const line of menu.split('\n')) {
   if (externalPage && group) group.pages.push({ title: externalPage[1], href: externalPage[2], external: true });
 }
 
+// The first-party packages' guides, synced beside the framework's pages, are a group of their own.
+const packagePages = JSON.parse(await readFile(join(siteRoot, 'public', 'content', 'packages.json'), 'utf8').catch(() => '[]'));
+if (packagePages.length > 0) {
+  const pages = packagePages.map((page) => ({ ...page, external: false }));
+  const existing = groups.find((group) => group.title === 'Packages');
+  if (existing) existing.pages.unshift(...pages);
+  else groups.push({ title: 'Packages', pages });
+}
+
 await rm(publicDocsRoot, { recursive: true, force: true });
 await mkdir(publicDocsRoot, { recursive: true });
 
@@ -49,7 +58,7 @@ for (const [position, page] of localPages.entries()) {
   const markdown = await readFile(join(sourceRoot, page.file), 'utf8');
   const previous = localPages[position - 1];
   const next = localPages[position + 1];
-  const pager = `<nav class="pager" aria-label="Previous and next page">${previous ? `<a href="${pageUrl(previous.file)}" rel="prev">← ${escapeHtml(previous.title)}</a>` : '<span></span>'}<a href="https://github.com/crabphp/framework/tree/main/docs/${page.file}">Source <span aria-hidden="true">↗</span></a>${next ? `<a href="${pageUrl(next.file)}" rel="next">${escapeHtml(next.title)} →</a>` : '<span></span>'}</nav>`;
+  const pager = `<nav class="pager" aria-label="Previous and next page">${previous ? `<a href="${pageUrl(previous.file)}" rel="prev">← ${escapeHtml(previous.title)}</a>` : '<span></span>'}<a href="${page.source ?? `https://github.com/crabphp/framework/tree/main/docs/${page.file}`}">Source <span aria-hidden="true">↗</span></a>${next ? `<a href="${pageUrl(next.file)}" rel="next">${escapeHtml(next.title)} →</a>` : '<span></span>'}</nav>`;
   const html = `<div class="docs">
   <details class="docs-nav" data-collapse open>
     <summary><span>Docs</span> / ${escapeHtml(page.title)}</summary>

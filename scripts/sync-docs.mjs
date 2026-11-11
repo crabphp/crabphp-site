@@ -59,3 +59,37 @@ for (const line of menu.split('\n')) {
 
 await writeFile(join(publicRoot, 'docs.json'), JSON.stringify({ pages, grouped }, null, 2) + '\n');
 console.log(`Synced ${sourceFiles.length} documentation files from ${sourceRoot}`);
+
+// Guides of the first-party packages, each beside the framework's pages under a group of its own.
+// Read from a checkout beside the site when there is one, else from the package's repository.
+const packages = [
+  {
+    title: 'Models (Tide)',
+    file: 'tide.md',
+    checkout: process.env.CRABPHP_TIDE_PATH ? resolve(siteRoot, process.env.CRABPHP_TIDE_PATH) : resolve(siteRoot, '..', 'tide'),
+    repository: 'https://github.com/crabphp/tide',
+    path: 'docs/guide.md',
+  },
+];
+const packagePages = [];
+for (const item of packages) {
+  let markdown;
+  try {
+    markdown = await readFile(join(item.checkout, item.path), 'utf8');
+  } catch {
+    const url = new URL(`${item.repository}/raw/main/${item.path}`);
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Could not fetch ${url} (${response.status}).`);
+    markdown = await response.text();
+  }
+  // A link to the package's own files leads to its repository.
+  markdown = markdown.replace(/\]\(\.\.\/([^)#]+)(#[^)]*)?\)/g, (_, file, anchor = '') => (
+    file === 'README.md'
+      ? `](${item.repository}${anchor || '#readme'})`
+      : `](${item.repository}/blob/main/${file}${anchor})`
+  ));
+  await writeFile(join(destinationRoot, item.file), markdown);
+  packagePages.push({ title: item.title, file: item.file, source: `${item.repository}/blob/main/${item.path}` });
+}
+await writeFile(join(publicRoot, 'packages.json'), JSON.stringify(packagePages, null, 2) + '\n');
+console.log(`Synced ${packagePages.length} package guide(s)`);

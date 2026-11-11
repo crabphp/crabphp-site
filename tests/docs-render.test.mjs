@@ -66,3 +66,33 @@ test('documentation renders highlighted blocks without changing source or code-l
   assert.match(sitemap, /\/design\/<\/loc>/);
   assert.match(sitemap, /\/bia\/<\/loc>/);
 });
+
+test('a package guide is a page of the Packages group, with its own source', async (t) => {
+  const root = await mkdtemp(join(tmpdir(), 'crab-site-packages-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  for (const directory of ['scripts', 'public/assets', 'public/content/docs']) {
+    await mkdir(join(root, directory), { recursive: true });
+  }
+  for (const file of ['scripts/render-docs.mjs', 'scripts/page.mjs', 'scripts/highlight.mjs', 'public/assets/crab.css']) {
+    await copyFile(new URL(`../${file}`, import.meta.url), join(root, file));
+  }
+  await symlink(fileURLToPath(new URL('../node_modules', import.meta.url)), join(root, 'node_modules'), 'dir');
+  await writeFile(
+    join(root, 'public/content/docs/documentation.md'),
+    '# Documentation\n\n## Basics\n\n- [Example](example.md)\n\n## Packages\n\n- [Arc](https://github.com/crabphp/arc): views\n',
+  );
+  await writeFile(join(root, 'public/content/docs/example.md'), '# Example\n');
+  await writeFile(join(root, 'public/content/docs/tide.md'), '# Tide by use case\n\nModels.\n');
+  await writeFile(
+    join(root, 'public/content/packages.json'),
+    JSON.stringify([{ title: 'Models (Tide)', file: 'tide.md', source: 'https://github.com/crabphp/tide/blob/main/docs/guide.md' }]),
+  );
+  await exec(process.execPath, [join(root, 'scripts/render-docs.mjs')]);
+
+  const html = await readFile(join(root, 'public/docs/tide/index.html'), 'utf8');
+  assert.equal(html.split('<p>Packages</p>').length - 1, 1, 'one Packages group');
+  assert.match(html, /<p>Packages<\/p><ul><li><a href="\/docs\/tide\/" aria-current="page">Models \(Tide\)<\/a><\/li><li><a href="https:\/\/github.com\/crabphp\/arc">/);
+  assert.match(html, /<a href="https:\/\/github.com\/crabphp\/tide\/blob\/main\/docs\/guide.md">Source/);
+  const index = await readFile(join(root, 'public/docs/index.html'), 'utf8');
+  assert.match(index, /href="\/docs\/tide\/">Models \(Tide\)/);
+});

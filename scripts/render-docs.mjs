@@ -37,7 +37,8 @@ const nav = (current = null) => groups.map(({ title, pages }) => `<div><p>${esca
 const index = groups.map(({ title, pages }) => `<h2>${escapeHtml(title)}</h2><ul>${pages.map((page) => `<li><a href="${page.external ? page.href : pageUrl(page.file)}">${escapeHtml(page.title)}</a>${page.external ? ' <span aria-hidden="true">↗</span>' : ''}</li>`).join('')}</ul>`).join('');
 const docsIndexBody = `<main id="main" class="page">
   <h1>Documentation</h1>
-  <p class="lede">Crab is a minimal PHP framework for web applications and JSON APIs. It gives a long-lived application routing, typed actions, validation, databases, queues, authentication and streaming. Arc adds server-rendered HTML views, layouts and components as an optional package. Start with installation, then follow the links as your application grows.</p>
+  <p class="lede">Crab is a minimal PHP framework for JSON APIs and services. It gives a long-lived application routing, typed actions, validation, databases, queues, authentication and streaming. Start with installation, then follow the links as your application grows.</p>
+  <p class="muted"><a href="/docs/views/">Views with Arc</a> are experimental, may change without backward compatibility, and must not be used in production.</p>
   ${index}
 </main>`;
 await writeFile(join(publicDocsRoot, 'index.html'), shell('Documentation', docsIndexBody, 'page'));
@@ -65,7 +66,9 @@ const siteUrl = (process.env.SITE_URL || 'https://crab.daudau.cc').replace(/\/$/
 const llmsIndex = [
   '# Crab',
   '',
-  '> A minimal PHP framework for web applications and JSON APIs, with server-rendered HTML views and components through the optional Arc package. The application runs as a long-lived server: explicit types, no hidden state, one way to do each thing.',
+  '> A minimal PHP framework for JSON APIs and services. The application runs as a long-lived server: explicit types, no hidden state, one way to do each thing.',
+  '',
+  'Arc and its HTML views integration are experimental, may change without backward compatibility, and must not be used in production.',
   '',
   'In a Crab application, run `php cua describe` to read every route, command, scheduled task, listener, database and setting before reading files (`--json` for JSON Schema). The app\'s `AGENTS.md` has the conventions, and the guide is also in `vendor/crabphp/framework/docs/`.',
   '',
@@ -87,7 +90,7 @@ for (const page of localPages) {
   fullGuide.push((await readFile(join(sourceRoot, page.file), 'utf8')).trim());
 }
 await writeFile(join(siteRoot, 'public', 'llms-full.txt'), `${fullGuide.join('\n\n---\n\n')}\n`);
-const urls = [`${siteUrl}/`, `${siteUrl}/docs/`, `${siteUrl}/design/`, ...localPages.map((page) => `${siteUrl}${pageUrl(page.file)}`)];
+const urls = [`${siteUrl}/`, `${siteUrl}/bia/`, `${siteUrl}/docs/`, `${siteUrl}/design/`, ...localPages.map((page) => `${siteUrl}${pageUrl(page.file)}`)];
 await writeFile(join(siteRoot, 'public', 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((url) => `  <url><loc>${url}</loc></url>`).join('\n')}\n</urlset>\n`);
 await writeFile(join(siteRoot, 'public', 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${siteUrl}/sitemap.xml\n`);
 console.log(`Rendered ${localPages.length} static documentation pages`);

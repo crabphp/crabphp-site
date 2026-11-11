@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#111111">
-  <meta name="description" content="Crab is fast, easy PHP for web apps, JSON APIs and services, with server-rendered views and components from Arc.">
-  <title>Crab — fast, easy PHP for web apps and APIs</title>
+  <meta name="description" content="Crab is fast, easy PHP for JSON APIs and services. A long-lived server with typed actions, validation, databases, queues and streaming.">
+  <title>Crab — fast, easy PHP for APIs and services</title>
   <link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/crab.css">
@@ -17,6 +17,7 @@
       <a class="wordmark" href="/" aria-label="Crab home">crab<span>.</span></a>
       <nav aria-label="Primary navigation">
         <a href="/docs/">Docs</a>
+        <a href="/bia/">Bia</a>
         <a href="#benchmarks">Benchmarks</a>
         <a href="https://github.com/crabphp/framework">GitHub <span aria-hidden="true">↗</span></a>
       </nav>
@@ -26,8 +27,7 @@
       <pre class="mascot" role="img" aria-label="Cua, the Crab mascot: a small crab with its claws raised">▙▟▗▄▄▄▄▄▖▙▟
  ▝<span class="eyes">█▄███▄█</span>▘</pre>
       <h1>Make PHP great again <span class="cursor" aria-hidden="true">█</span></h1>
-      <p class="lede">Fast to run, easy to use, and small enough to understand. Crab gives long-lived PHP applications a clear foundation for web apps, JSON APIs, and the work around them.</p>
-      <p class="muted">Build a regular server-rendered website too: <a href="/docs/views/">Arc adds HTML views, layouts and components</a>, with ordinary forms and no frontend framework required.</p>
+      <p class="lede">Fast to run, easy to use, and small enough to understand. Crab gives long-lived PHP applications a clear foundation for JSON APIs, services, and the work around them.</p>
       <pre><code class="language-sh">composer create-project crabphp/crab my-app
 cd my-app
 php cua dev</code></pre>
@@ -40,6 +40,14 @@ php cua dev</code></pre>
           <dt>Easy</dt><dd>Typed actions, named services, ordinary PHP. One way to do each thing keeps the important parts visible.</dd>
           <dt>Built-in</dt><dd>Routing, validation, databases, queues, scheduling, authentication, HTTP, streaming, and WebSockets on one small foundation.</dd>
         </dl>
+      </section>
+
+      <section class="section" aria-labelledby="showcase">
+        <h2 id="showcase">Built with CrabPHP</h2>
+        <p class="muted">Not just example routes. Real software, built on the same foundation.</p>
+        <h3>Bia — a coding agent for your terminal</h3>
+        <p class="muted">Read the code, make the change, run the tests. Bia works in your project with your choice of model, streams its replies, and saves the conversation so you can pick it up later. Written in PHP, powered by Crab's engine.</p>
+        <p><a href="/bia/">Meet Bia <span aria-hidden="true">→</span></a></p>
       </section>
 
       <section class="section" aria-labelledby="benchmarks">
@@ -91,7 +99,6 @@ Starting my-app server on http://127.0.0.1:8080
           <li><a href="/docs/routing/">Routing</a> <span class="muted">typed parameters and groups</span></li>
           <li><a href="/docs/actions/">Actions</a> <span class="muted">classes that say what they need</span></li>
           <li><a href="/docs/validation/">Validation</a> <span class="muted">input checked before your action</span></li>
-          <li><a href="/docs/views/">Views with Arc</a> <span class="muted">HTML pages, layouts and components; an optional package</span></li>
           <li><a href="/docs/database/">Database</a> <span class="muted">SQLite and MySQL, async when needed</span></li>
           <li><a href="/docs/queues/">Queues</a> <span class="muted">durable work outside a request</span></li>
           <li><a href="/docs/ai/">AI applications</a> <span class="muted">streaming, runs, and actors</span></li>

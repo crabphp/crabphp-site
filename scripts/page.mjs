@@ -54,7 +54,7 @@ export function renderPage(source) {
 }
 
 // `width` matches the header and footer to the content under them.
-export const shell = (title, body, width, description = 'Crab framework documentation for PHP web applications and JSON APIs.') => `<!doctype html>
+export const shell = (title, body, width, description = 'Crab framework documentation for PHP JSON APIs and services.') => `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -70,7 +70,7 @@ export const shell = (title, body, width, description = 'Crab framework document
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header ${width}">
     <a class="wordmark" href="/" aria-label="Crab home">crab<span>.</span></a>
-    <nav aria-label="Site navigation"><a href="/">Home</a><a href="/docs/">Docs</a><a href="https://github.com/crabphp/framework">GitHub <span aria-hidden="true">↗</span></a></nav>
+    <nav aria-label="Site navigation"><a href="/">Home</a><a href="/docs/">Docs</a><a href="/bia/">Bia</a><a href="https://github.com/crabphp/framework">GitHub <span aria-hidden="true">↗</span></a></nav>
   </header>
   ${body}
   <footer class="site-footer ${width}">

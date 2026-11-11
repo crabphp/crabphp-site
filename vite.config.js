@@ -5,7 +5,7 @@ import { defineConfig } from 'vite';
 import { highlightCodeBlocks } from './scripts/highlight.mjs';
 import { addBenchmarkPings } from './scripts/benchmark-pings.mjs';
 
-// Same versioned stylesheet URL as scripts/render-docs.mjs writes into the docs pages.
+// Both landing pages use the same versioned stylesheet URL as generated docs.
 function versionedStylesheet() {
   return {
     name: 'versioned-stylesheet',
@@ -31,12 +31,12 @@ function benchmarkPings() {
 }
 
 export function generatedDirectoryPages() {
-  const middleware = (roots) => (request, response, next) => {
+  const middleware = (roots, sourceRoot) => (request, response, next) => {
     if (request.method !== 'GET' && request.method !== 'HEAD') return next();
 
     const url = new URL(request.url, 'http://localhost');
     const { pathname } = url;
-    // Let Vite transform the landing page (including syntax highlighting).
+    // Let Vite transform the homepage (including syntax highlighting).
     if (pathname === '/') return next();
 
     const file = roots.map((root) => join(root, pathname, 'index.html')).find(existsSync);
@@ -47,6 +47,9 @@ export function generatedDirectoryPages() {
       return response.end();
     }
 
+    // Source entry points need Vite's HTML transforms, not a raw file stream.
+    if (sourceRoot && file === join(sourceRoot, pathname, 'index.html')) return next();
+
     response.statusCode = 200;
     response.setHeader('Content-Type', 'text/html; charset=UTF-8');
     if (request.method === 'HEAD') return response.end();
@@ -55,7 +58,7 @@ export function generatedDirectoryPages() {
   return {
     name: 'generated-directory-pages',
     configureServer(server) {
-      server.middlewares.use(middleware([server.config.publicDir, server.config.root]));
+      server.middlewares.use(middleware([server.config.publicDir, server.config.root], server.config.root));
     },
     configurePreviewServer(server) {
       server.middlewares.use(middleware([resolve(server.config.root, server.config.build.outDir)]));
@@ -73,6 +76,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         home: 'index.html',
+        bia: 'bia/index.html',
       },
     },
   },

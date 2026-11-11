@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="Bia is a fast, resumable coding agent for your terminal. Read code, make changes and run tests with your choice of model. Open source, built on Crab's PHP engine.">
+  <title>Bia — a coding agent for your terminal · CrabPHP</title>
+  <link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/crab.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="page">
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Crab home">crab<span>.</span></a>
+      <nav aria-label="Primary navigation">
+        <a href="/bia/" aria-current="page">Bia</a>
+        <a href="https://github.com/crabphp/bia#readme">Guide <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/crabphp/bia">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <pre class="mascot" role="img" aria-label="Bia's cat mascot">▙▄▄▄▄▄▟
+█▙███▟█</pre>
+      <h1>Bia — a coding agent for your terminal <span class="cursor" aria-hidden="true">█</span></h1>
+      <p class="lede">Read the code. Make the change. Run the tests. Bia works in your project, streams its replies, and keeps the conversation so you can pick it up later.</p>
+      <p class="muted">Bring your own model. Use it on any codebase. Open source and MIT licensed.</p>
+      <p><a href="#install">Install Bia <span aria-hidden="true">→</span></a> · <a href="https://github.com/crabphp/bia">Read the source <span aria-hidden="true">↗</span></a></p>
+
+      <section class="section" aria-labelledby="conversation">
+        <h2 id="conversation">From a failing test to a fix</h2>
+        <p class="muted">Ask in plain language. Follow the files it reads, the diff it makes and the commands it runs.</p>
+        <pre><code class="language-text">› fix the failing test
+
+• Explored
+  └ Read CalcTest.php, Calc.php
+• Edited src/Calc.php (+1 −1)
+  └   12 - return $a - $b;
+      12 + return $a + $b;
+• Ran composer test
+  └ OK (12 tests, 30 assertions)
+
+Fixed: add() subtracted.</code></pre>
+        <p class="faint">Example conversation from <a href="https://github.com/crabphp/bia#usage">Bia's guide <span aria-hidden="true">↗</span></a>, not a live session.</p>
+      </section>
+
+      <section class="section" aria-labelledby="features">
+        <h2 id="features">Your project. Your tools. Your model.</h2>
+        <dl class="defs">
+          <dt>Coding tools</dt><dd>Read and search files, make exact edits, apply patches, run commands and inspect the git diff. Read-only calls can run concurrently.</dd>
+          <dt>Your models</dt><dd>Use OpenAI-compatible APIs, including OpenAI, OpenRouter, Ollama and LM Studio. Switch models in the same conversation; configure fallbacks when a provider is unavailable.</dd>
+          <dt>Pick up later</dt><dd>Conversations are saved locally in SQLite. Resume one, fork it to try another direction, or export it as JSONL.</dd>
+          <dt>Long tasks</dt><dd>No fixed limit on model/tool steps in a turn. Older context is summarized when needed. Bia works until the model finishes, you stop it, or an error ends the turn.</dd>
+          <dt>Project context</dt><dd>Reads your AGENTS.md instructions. Keeps memories between sessions as plain files you can inspect, edit or delete.</dd>
+          <dt>Stay in control</dt><dd>Send another message while it works to steer the next step. Press Esc to stop the turn, its model request and running commands.</dd>
+          <dt>Make it yours</dt><dd>Add skills, connect MCP servers, or ask Bia to write a plugin with a new slash command or tool.</dd>
+        </dl>
+        <p><a href="https://github.com/crabphp/bia#features">Explore the features <span aria-hidden="true">↗</span></a></p>
+      </section>
+
+      <section class="section" aria-labelledby="install">
+        <h2 id="install">Install Bia</h2>
+        <p class="muted">The prebuilt binary includes PHP. No PHP or Composer installation needed. Linux and macOS, Intel or ARM; on Windows, use WSL.</p>
+        <pre><code class="language-sh">curl -fsSL https://raw.githubusercontent.com/crabphp/bia/main/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+bia doctor</code></pre>
+        <p class="muted">The installer checks the download against the release's SHA256SUMS and installs to <code>~/.local/bin</code>. Add the PATH line to your shell's startup file if needed. Install <code>git</code> and <code>ripgrep</code> for patches, diffs and search; <code>bia doctor</code> checks what is available.</p>
+        <p><a href="https://github.com/crabphp/bia/blob/main/install.sh">Inspect the installer <span aria-hidden="true">↗</span></a> · <a href="https://github.com/crabphp/bia#from-source-with-composer">Build from source <span aria-hidden="true">↗</span></a></p>
+
+        <h3>Connect a model</h3>
+        <p class="muted">Create your global config:</p>
+        <pre><code class="language-sh">bia init --global</code></pre>
+        <p class="muted">In <code>~/.bia/config.php</code>, set your provider's key and choose a model. For example, these entries inside the returned array use OpenAI and read the key from your environment:</p>
+        <pre><code class="language-php">'providers' =&gt; [
+    'openai' =&gt; ['api_key' =&gt; env('OPENAI_API_KEY')],
+],
+'model' =&gt; ['name' =&gt; 'openai/gpt-5'],</code></pre>
+        <p class="muted">Set <code>OPENAI_API_KEY</code> in your shell environment, then start in your project:</p>
+        <pre><code class="language-sh">cd ~/code/my-project
+bia "explain the structure of this repository"</code></pre>
+        <p class="muted">Run <code>bia</code> without a prompt for an interactive conversation, <code>bia resume</code> to continue one, and <code>bia update</code> to update an installed binary.</p>
+        <p><a href="https://github.com/crabphp/bia#configuration">Other providers and configuration <span aria-hidden="true">↗</span></a></p>
+      </section>
+
+      <section class="section" aria-labelledby="permissions">
+        <h2 id="permissions">Know what it can do</h2>
+        <blockquote><p>Bia is not a sandbox. Tools run with full permission by default, and shell commands have your access to the machine. Review the changes it makes. Set read, write or shell permissions to <code>ask</code> or <code>deny</code> when you need tighter control.</p></blockquote>
+        <p class="muted">Bia is an early-stage project. It supports OpenAI-compatible Chat Completions and Responses APIs, not native Anthropic Messages or Gemini APIs. Commands run without an interactive terminal.</p>
+        <p><a href="https://github.com/crabphp/bia#permissions">Permissions <span aria-hidden="true">↗</span></a> · <a href="https://github.com/crabphp/bia#status-and-limits">Status and limits <span aria-hidden="true">↗</span></a></p>
+      </section>
+
+      <section class="section" aria-labelledby="powered-by">
+        <h2 id="powered-by">Built with CrabPHP</h2>
+        <p class="muted">Bia is written in PHP 8.4 on Crab's engine. The event loop coordinates the work, the HTTP client streams model replies, and cancellable subprocesses run the commands. It starts no web application to have a conversation.</p>
+        <p class="muted">A terminal agent, built from the same foundation as Crab's JSON APIs and services.</p>
+        <p><a href="/">Meet Crab <span aria-hidden="true">→</span></a> · <a href="/docs/">Framework documentation <span aria-hidden="true">→</span></a></p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>~*~ crab · MIT licensed · PHP · <a href="/design/">Design</a> · <a href="https://github.com/crabphp">github.com/crabphp <span aria-hidden="true">↗</span></a> ~*~</p>
+    </footer>
+  </div>
+</body>
+</html>

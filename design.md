@@ -80,11 +80,11 @@ Direct, calm, and specific. Short sentences. Explain why, not only what. No hype
 
 ## Repository
 
-- `index.html` is the landing page, built by Vite.
+- `index.html` is the API-focused framework homepage; its “Built with CrabPHP” section introduces Bia before the benchmarks. `bia/index.html` is Bia's product landing page: conversation example, features, setup, permissions and its connection to Crab. Both are Vite entry points, using the existing single-column layout and stylesheet without browser JavaScript.
 - `public/assets/crab.css` is the site stylesheet; `public/assets/fonts/` holds the fonts and licence. Both are copied as they are and cached forever; pages link the stylesheet as `crab.css?v=<hash of its content>` (written by `page.mjs` for generated pages and by a Vite hook for `index.html`), so a change gets a new URL.
 - `scripts/sync-docs.mjs` copies Markdown from the framework repo into `public/content/docs/` (generated).
 - `scripts/sync-design.mjs` copies the existing `crabphp/design` showcase and its assets into `public/design/` at build time. Nothing is restyled or re-rendered. The source is `../design` locally; CI checks out the design repo and sets `CRABPHP_DESIGN_PATH`. The copied files are generated and ignored by Git.
 - `scripts/page.mjs` provides the documentation's HTML shell, footer, versioned stylesheet URL and Markdown renderer.
-- `scripts/render-docs.mjs` renders the guide into `public/docs/` (generated), with GitHub-style heading ids so the Markdown's anchors work. The sitemap includes `/design/`. It also writes `public/llms.txt` (an index of the Markdown pages for agents) and `public/llms-full.txt` (the whole guide in one file), both generated.
-- `scripts/highlight.mjs` supplies the shared highlighter. The Markdown renderer calls it for fenced and indented blocks; a Vite HTML hook highlights language-tagged landing-page blocks in development and production.
+- `scripts/render-docs.mjs` renders the guide into `public/docs/` (generated), with GitHub-style heading ids so the Markdown's anchors work. The sitemap includes `/bia/` and `/design/`. It also writes `public/llms.txt` (an index of the Markdown pages for agents) and `public/llms-full.txt` (the whole guide in one file), both generated.
+- `scripts/highlight.mjs` supplies the shared highlighter. The Markdown renderer calls it for fenced and indented blocks; a Vite HTML hook highlights language-tagged blocks on both landing pages in development and production.
 - Update this document before adding a colour, a size, or a new layout pattern to the site. Shared component changes belong in the design repo instead.

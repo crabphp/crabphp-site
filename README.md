@@ -1,6 +1,14 @@
 # CrabPHP site
 
-The static CrabPHP landing page and documentation site.
+The static CrabPHP homepage, Bia landing page and framework documentation site.
+
+## Landing pages
+
+`index.html` presents Crab as a foundation for JSON APIs and services. Its **Built with CrabPHP** section introduces Bia and links to `/bia/`, a product page with a conversation example, features, installation, configuration and permissions. Bia's [README](https://github.com/crabphp/bia#readme) is the source for those product details; keep the page in step when its setup changes.
+
+Both pages are Vite HTML entry points, using the same stylesheet, build-time highlighting and cache versioning. `/bia` redirects to `/bia/`; the sitemap includes the product page. No browser JavaScript is required.
+
+Arc/views are experimental, subject to breaking changes and not for production. Their warning belongs in the framework's source documentation as well as the site's documentation introduction and agent index.
 
 ## Development
 

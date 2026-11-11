@@ -54,5 +54,15 @@ test('documentation renders highlighted blocks without changing source or code-l
     const design = findAll(footer, 'a').find((node) => node.attrs.some(({ name, value }) => name === 'href' && value === '/design/'));
     assert.equal(textContent(design), 'Design');
   }
-  assert.match(await readFile(join(root, 'public/sitemap.xml'), 'utf8'), /\/design\/<\/loc>/);
+  const indexText = textContent(parseFragment(index));
+  assert.match(indexText, /JSON APIs and services/);
+  assert.match(indexText, /Views with Arc are experimental, may change without backward compatibility, and must not be used in production/);
+  assert.doesNotMatch(indexText, /framework for web applications/);
+  assert.ok(findAll(parseFragment(index), 'a').some((node) => node.attrs.some(({ name, value }) => name === 'href' && value === '/bia/')), 'The docs link to Bia');
+  const llms = await readFile(join(root, 'public/llms.txt'), 'utf8');
+  assert.match(llms, /JSON APIs and services/);
+  assert.match(llms, /Arc and its HTML views integration are experimental, may change without backward compatibility, and must not be used in production/);
+  const sitemap = await readFile(join(root, 'public/sitemap.xml'), 'utf8');
+  assert.match(sitemap, /\/design\/<\/loc>/);
+  assert.match(sitemap, /\/bia\/<\/loc>/);
 });

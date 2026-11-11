@@ -76,7 +76,7 @@ The Cloudflare token only needs Pages deployment permission for this project/acc
 
 ## Benchmark data
 
-The landing-page table is generated from the independent public [crabphp/benchmarks](https://github.com/crabphp/benchmarks) repository. The current reference run is `20261110T104256Z`: PHP 8.5.12, all seven frameworks at their recorded stable releases, five trials per case, and zero errors.
+The landing-page table is generated from the independent public [crabphp/benchmarks](https://github.com/crabphp/benchmarks) repository. The seven framework rows retain reference run `20261110T104256Z`; ReactPHP and AMP use supplement `20261111T055316Z`. Both use PHP 8.5.12, five trials per published case, and zero errors. The table labels and links the separate measurement dates rather than implying a simultaneous comparison.
 
 To update it from a new reference run:
 
@@ -85,5 +85,13 @@ python3 ../benchmarks/update-site.py ../benchmarks/results/<timestamp> --site .
 ```
 
 The updater verifies every retained wrk result and recomputes the medians. It rejects smoke runs, missing trials and any errors. Keep the date, runtime versions, machine limitations and raw-results links with the table.
+
+To add the two HTTP library rows without rerunning or replacing the existing framework measurements:
+
+```sh
+python3 ../benchmarks/add-libraries.py ../benchmarks/results/<library-timestamp> --baseline ../benchmarks/results/20261110T104256Z --site .
+```
+
+This requires an audited five-trial ReactPHP/AMP supplement for Hello and MySQL at 64 connections. It retains the existing seven rows, checks host/runtime compatibility, and labels and links the separate measurement dates. ReactPHP and AMP are HTTP libraries with routers, explicit validation and native async MySQL drivers, not full application frameworks.
 
 Vite adds full-width animated tracks below the Hello numbers through `scripts/benchmark-pings.mjs`, deriving speeds directly from that column. Framework names and Database results stay free of animation. The fastest result takes one second per direction; the others take proportionally longer. The same transform adds the short motion note, so regenerating the benchmark section preserves the feature without manual markup. There are no pause controls. Motion is CSS-only and respects reduced-motion preferences.

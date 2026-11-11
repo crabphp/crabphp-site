@@ -70,7 +70,7 @@ for (const [position, page] of localPages.entries()) {
   await writeFile(join(publicDocsRoot, file, 'index.html'), shell(page.title, html, 'docs-width'));
 }
 
-const siteUrl = (process.env.SITE_URL || 'https://crab.daudau.cc').replace(/\/$/, '');
+const siteUrl = (process.env.SITE_URL || 'https://crabphp.com').replace(/\/$/, '');
 
 const llmsIndex = [
   '# Crab',

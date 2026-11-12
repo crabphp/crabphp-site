@@ -64,7 +64,7 @@ console.log(`Synced ${sourceFiles.length} documentation files from ${sourceRoot}
 // Read from a checkout beside the site when there is one, else from the package's repository.
 const packages = [
   {
-    title: 'Models (Tide)',
+    title: 'ORM (Tide)',
     file: 'tide.md',
     checkout: process.env.CRABPHP_TIDE_PATH ? resolve(siteRoot, process.env.CRABPHP_TIDE_PATH) : resolve(siteRoot, '..', 'tide'),
     repository: 'https://github.com/crabphp/tide',

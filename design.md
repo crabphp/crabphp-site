@@ -7,28 +7,43 @@ The site reads like a plain text file in a terminal: one font, one size, a singl
 ## Direction
 
 - One typeface (JetBrains Mono), one size, one line height.
-- Dark background, white text, amber for links and emphasis. Code blocks are the exception: syntax highlighting uses a small palette based on Pierre Dark.
+- Light, dark or the reader's system theme (the default). Text at four strengths, amber for links and emphasis. Code blocks are the exception: syntax highlighting uses a small palette based on Pierre Dark, darkened to AA in the light theme.
 - Headings are uppercase bold at body size, prefixed with `#`, `##`, `###`.
 - No images, icons, gradients, shadows, cards, or rounded corners. Borders are reserved for thin table grids and blockquote rules.
 - No frontend framework. Semantic HTML and one stylesheet: `public/assets/crab.css`.
-- No JavaScript needed for anything.
+- No JavaScript needed for anything. Without it, the page follows the system theme and the theme switch stays hidden.
 
 ## Tokens
 
+Color values come from [crabphp/design](https://github.com/crabphp/design)'s `css/tokens.css`, names unchanged. Each is written `light-dark(light, dark)` and resolves through `color-scheme`. Copy new values from there rather than choosing them here.
+
 ```css
---bg: #111111;
---text: rgba(255, 255, 255, .88);   /* body */
---strong: #ffffff;                  /* headings, code, wordmark */
---amber: #f5b800;                   /* links, current page, selection, focus */
---muted: rgba(255, 255, 255, .62);  /* descriptions */
---faint: rgba(255, 255, 255, .5);   /* metadata, heading marks, comments */
---surface: rgba(255, 255, 255, .045); /* code blocks only */
+--bg: light-dark(#fbfbf9, #111111);
+--text: light-dark(rgba(17, 17, 17, .88), rgba(255, 255, 255, .88));  /* body */
+--strong: light-dark(#111111, #ffffff);                              /* headings, code, wordmark */
+--amber: light-dark(#8f6500, #f5b800);                               /* links, current page, selection, focus */
+--muted: light-dark(rgba(17, 17, 17, .7), rgba(255, 255, 255, .62)); /* descriptions */
+--faint: light-dark(rgba(17, 17, 17, .6), rgba(255, 255, 255, .5));  /* metadata, heading marks, comments */
+--line: light-dark(rgba(17, 17, 17, .14), rgba(255, 255, 255, .14)); /* table grids */
+--surface: light-dark(rgba(0, 0, 0, .045), rgba(255, 255, 255, .045)); /* code blocks only */
 --size: 13px;
 --lh: 21px;
 --measure: 680px;
 ```
 
-`--faint` is the lowest opacity allowed for text, which keeps contrast at or above WCAG AA. Outside syntax-highlighted code, do not add hues: meaning comes from words and structure.
+`--faint` is the lowest opacity allowed for text, which keeps contrast at or above WCAG AA in both themes. Outside syntax-highlighted code, do not add hues: meaning comes from words and structure.
+
+## Themes
+
+The same convention as the design repo: `data-theme` on `<html>`.
+
+| Attribute | Theme |
+| --- | --- |
+| none, or `data-theme="auto"` | follows `prefers-color-scheme` (the default) |
+| `data-theme="light"` | light |
+| `data-theme="dark"` | dark |
+
+`scripts/theme.mjs` supplies the only theme code: an inline head script, two `theme-color` metas (one per system scheme) and the footer switch, `Theme System Light Dark`, as text buttons with `aria-pressed`. The chosen button is amber. The head script applies the saved choice before first paint and keeps `theme-color` in step. The choice is stored in `localStorage` as `crab-theme`, the key the `/design/` showcase uses, so both follow the same setting. `page.mjs` adds the pieces to generated docs; a Vite hook adds them to both landing pages.
 
 ## Rhythm
 
@@ -46,7 +61,7 @@ The page has `40px` padding (`24px 16px` on small screens) and a centered max-wi
 - Lists use `- ` markers in faint white.
 - Inline code is white with no background. Code blocks use `--surface` and the same size as body text.
 - Syntax highlighting uses the `@pierre/highlights` HTML API at build time, shared by Markdown docs and landing-page `<pre><code class="language-…">` examples. No highlighter JavaScript or WebAssembly is sent to the browser.
-- Code-only palette, based on Pierre Dark: pink `#ff678d` keywords and tags, green `#5ecc71` strings, cyan `#68cdf2` numbers and constants, purple `#9d6afb` functions, magenta `#d568ea` types, orange `#ffa359` variables and properties, and cyan `#08c0ef` operators and escapes. Comments use `--faint`; punctuation and ordinary text stay white. The block background remains `--surface`. These colours are CSS variables scoped to `.highlights`.
+- Code-only palette, based on Pierre Dark (dark values shown; the light theme uses the design repo's darker AA values): pink `#ff678d` keywords and tags, green `#5ecc71` strings, cyan `#68cdf2` numbers and constants, purple `#9d6afb` functions, magenta `#d568ea` types, orange `#ffa359` variables and properties, and cyan `#08c0ef` operators and escapes. Comments use `--faint`; punctuation and ordinary text stay white. The block background remains `--surface`. These colours are CSS variables scoped to `.highlights`.
 - Plain text, terminal output, and unsupported languages render safely without syntax colours. Inline code and the mascot are not highlighted.
 - Tables use a collapsed 1px grid in `--line`, with half a line of vertical padding and `2ch` horizontal padding in every cell. The landing benchmark table uses only horizontal row separators, with its outer content edges flush to the caption. Headers are faint, numbers are right-aligned with tabular figures. Captions remain outside the grid.
 - Blockquotes (notes) have a 1px amber left rule.
@@ -63,7 +78,7 @@ The page has `40px` padding (`24px 16px` on small screens) and a centered max-wi
 - Below `860px` the navigation becomes a bar stuck to the top, `Docs / Page title`, that opens into a scrolling menu; it and On this page start closed. Both are open in the HTML and closed by a tiny inline script, so everything works without JavaScript.
 - Below `560px` text goes to `14px / 22px`, code to `13px`, code blocks run to the screen edges, and every link is at least 28px tall.
 - Pager: previous, source, next.
-- Footer: one faint line framed by `~*~`, with a `Design` link to `/design/` on the landing page and documentation.
+- Footer: one faint line framed by `~*~`, with a `Design` link to `/design/` on the landing page and documentation, then the theme switch on its own line.
 
 Add a component only when the same structure appears in more than one place.
 
@@ -80,7 +95,7 @@ Direct, calm, and specific. Short sentences. Explain why, not only what. No hype
 
 ## Repository
 
-- `index.html` is the API-focused framework homepage; its “Built with CrabPHP” section introduces Bia before the benchmarks. `bia/index.html` is Bia's product landing page: conversation example, features, setup, permissions and its connection to Crab. Both are Vite entry points, using the existing single-column layout and stylesheet without browser JavaScript.
+- `index.html` is the API-focused framework homepage; its “Built with CrabPHP” section introduces Bia before the benchmarks. `bia/index.html` is Bia's product landing page: conversation example, features, setup, permissions and its connection to Crab. Both are Vite entry points, using the existing single-column layout and stylesheet; their only browser JavaScript is the theme script.
 - `public/assets/crab.css` is the site stylesheet; `public/assets/fonts/` holds the fonts and licence. Both are copied as they are and cached forever; pages link the stylesheet as `crab.css?v=<hash of its content>` (written by `page.mjs` for generated pages and by a Vite hook for `index.html`), so a change gets a new URL.
 - `scripts/sync-docs.mjs` copies Markdown from the framework repo into `public/content/docs/` (generated).
 - `scripts/sync-design.mjs` copies the existing `crabphp/design` showcase and its assets into `public/design/` at build time. Nothing is restyled or re-rendered. The source is `../design` locally; CI checks out the design repo and sets `CRABPHP_DESIGN_PATH`. The copied files are generated and ignored by Git.

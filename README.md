@@ -8,6 +8,8 @@ The static CrabPHP homepage, Bia landing page and framework documentation site.
 
 Both pages are Vite HTML entry points, using the same stylesheet, build-time highlighting and cache versioning. `/bia` redirects to `/bia/`; the sitemap includes the product page. No browser JavaScript is required.
 
+Every page follows the reader's system theme by default; a footer switch offers System, Light and Dark and remembers the choice. The colors come from the [crabphp/design](https://github.com/crabphp/design) tokens. See `design.md` for details.
+
 Arc/views are experimental, subject to breaking changes and not for production. Their warning belongs in the framework's source documentation as well as the site's documentation introduction and agent index.
 
 ## Development

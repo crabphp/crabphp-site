@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import { highlightCodeBlocks } from './scripts/highlight.mjs';
 import { addBenchmarkPings } from './scripts/benchmark-pings.mjs';
+import { addTheme } from './scripts/theme.mjs';
 
 // Both landing pages use the same versioned stylesheet URL as generated docs.
 function versionedStylesheet() {
@@ -27,6 +28,13 @@ function benchmarkPings() {
   return {
     name: 'benchmark-pings',
     transformIndexHtml: addBenchmarkPings,
+  };
+}
+
+function themeSwitch() {
+  return {
+    name: 'theme-switch',
+    transformIndexHtml: addTheme,
   };
 }
 
@@ -69,7 +77,7 @@ export function generatedDirectoryPages() {
 export default defineConfig({
   root: '.',
   publicDir: 'public',
-  plugins: [generatedDirectoryPages(), highlightedCodeExamples(), benchmarkPings(), versionedStylesheet()],
+  plugins: [generatedDirectoryPages(), highlightedCodeExamples(), benchmarkPings(), themeSwitch(), versionedStylesheet()],
   build: {
     outDir: 'dist',
     emptyOutDir: true,

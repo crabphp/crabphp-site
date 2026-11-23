@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { Marked } from 'marked';
 import { highlightCode } from './highlight.mjs';
+import { themeMeta, themeScript, themeSwitch } from './theme.mjs';
 
 // All generated pages use the real stylesheet and invalidate its cache together.
 const cssHash = createHash('sha256').update(await readFile(new URL('../public/assets/crab.css', import.meta.url))).digest('hex').slice(0, 10);
@@ -59,12 +60,13 @@ export const shell = (title, body, width, description = 'Crab framework document
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111111">
+  ${themeMeta}
   <meta name="description" content="${escapeHtml(description)}">
   <title>${escapeHtml(title)} · Crab</title>
   <link rel="preload" href="/assets/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="${cssUrl}">
+  ${themeScript}
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -75,6 +77,7 @@ export const shell = (title, body, width, description = 'Crab framework document
   ${body}
   <footer class="site-footer ${width}">
     <p>~*~ crab · MIT licensed · PHP · <a href="/design/">Design</a> · <a href="https://github.com/crabphp">github.com/crabphp <span aria-hidden="true">↗</span></a> ~*~</p>
+    ${themeSwitch}
   </footer>
 </body>
 </html>

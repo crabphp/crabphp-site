@@ -13,20 +13,24 @@
 }
 
 :root {
-  color-scheme: dark;
-  --bg: #111111;
-  --text: rgba(255, 255, 255, .88);
-  --strong: #ffffff;
-  --amber: #f5b800;
-  --muted: rgba(255, 255, 255, .62);
-  --faint: rgba(255, 255, 255, .5);
-  --line: rgba(255, 255, 255, .14);
-  --surface: rgba(255, 255, 255, .045);
+  /* Values from crabphp/design css/tokens.css: light-dark(light, dark). */
+  color-scheme: light dark;
+  --bg: light-dark(#fbfbf9, #111111);
+  --text: light-dark(rgba(17, 17, 17, .88), rgba(255, 255, 255, .88));
+  --strong: light-dark(#111111, #ffffff);
+  --amber: light-dark(#8f6500, #f5b800);
+  --muted: light-dark(rgba(17, 17, 17, .7), rgba(255, 255, 255, .62));
+  --faint: light-dark(rgba(17, 17, 17, .6), rgba(255, 255, 255, .5));
+  --line: light-dark(rgba(17, 17, 17, .14), rgba(255, 255, 255, .14));
+  --surface: light-dark(rgba(0, 0, 0, .045), rgba(255, 255, 255, .045));
   --size: 13px;
   --lh: 21px;
   --measure: 680px;
   --pad-x: 40px;
 }
+/* No attribute or "auto" follows the system; the switch sets light or dark. */
+[data-theme="light"] { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
 
 * { box-sizing: border-box; }
 ::selection { background: var(--amber); color: var(--bg); }
@@ -116,13 +120,13 @@ hr::before { content: "~*~"; }
   --code-background: var(--surface);
   --code-foreground: var(--strong);
   --code-comment: var(--faint);
-  --code-keyword: #ff678d;
-  --code-string: #5ecc71;
-  --code-number: #68cdf2;
-  --code-function: #9d6afb;
-  --code-type: #d568ea;
-  --code-variable: #ffa359;
-  --code-operator: #08c0ef;
+  --code-keyword: light-dark(#c22350, #ff678d);
+  --code-string: light-dark(#1d7a35, #5ecc71);
+  --code-number: light-dark(#0c6e96, #68cdf2);
+  --code-function: light-dark(#6e3fd6, #9d6afb);
+  --code-type: light-dark(#9a2fb3, #d568ea);
+  --code-variable: light-dark(#a85400, #ffa359);
+  --code-operator: light-dark(#00789c, #08c0ef);
 }
 
 .defs { display: grid; grid-template-columns: 16ch 1fr; gap: 0 2ch; margin: 0 0 var(--lh); }
@@ -155,6 +159,10 @@ hr::before { content: "~*~"; }
 .benchmark-explainer { display: none; color: var(--faint); }
 
 .site-footer { margin-top: calc(var(--lh) * 4); color: var(--faint); }
+.theme-switch[hidden] { display: none; }
+.theme-switch button { margin-left: 1ch; padding: 0; border: 0; background: none; color: var(--muted); font: inherit; cursor: pointer; }
+.theme-switch button:hover { color: var(--strong); }
+.theme-switch button[aria-pressed="true"] { color: var(--amber); }
 
 /* Documentation */
 /* The header is as wide as the columns under it: navigation, gap and text. */
@@ -251,5 +259,5 @@ details[open] > summary::after { content: " −"; }
   .table-wrap th .faint { display: block; font-size: 12px; }
   .pager { flex-direction: column; gap: calc(var(--lh) / 2); }
   .pager span:empty { display: none; }
-  main a, .site-footer a { display: inline-block; min-height: 28px; }
+  main a, .site-footer a, .theme-switch button { display: inline-block; min-height: 28px; }
 }

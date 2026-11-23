@@ -90,7 +90,7 @@ test('production builds both landing pages and preview serves the Bia page with 
   const home = await readFile(join(outDir, 'index.html'), 'utf8');
   const bia = await readFile(join(outDir, 'bia/index.html'), 'utf8');
   const tree = checkBiaPage(bia);
-  assert.equal(findAll(tree, 'script').length, 0, 'No browser JavaScript is shipped for the product page');
+  assert.equal(findAll(tree, 'script').length, 1, 'Only the theme script is shipped for the product page');
   assert.match(bia, /var\(--code-keyword\)/);
   assert.match(bia, /href="\/assets\/crab\.css\?v=[a-f0-9]{10}"/);
   assert.equal(bia.match(/href="(\/assets\/crab\.css[^\"]+)"/)[1], home.match(/href="(\/assets\/crab\.css[^\"]+)"/)[1]);

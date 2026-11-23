@@ -21,7 +21,7 @@ test('documentation renders highlighted blocks without changing source or code-l
   for (const directory of ['scripts', 'public/assets', 'public/content/docs']) {
     await mkdir(join(root, directory), { recursive: true });
   }
-  for (const file of ['scripts/render-docs.mjs', 'scripts/page.mjs', 'scripts/highlight.mjs', 'public/assets/crab.css']) {
+  for (const file of ['scripts/render-docs.mjs', 'scripts/page.mjs', 'scripts/highlight.mjs', 'scripts/theme.mjs', 'public/assets/crab.css']) {
     await copyFile(new URL(`../${file}`, import.meta.url), join(root, file));
   }
   await symlink(fileURLToPath(new URL('../node_modules', import.meta.url)), join(root, 'node_modules'), 'dir');
@@ -43,7 +43,7 @@ test('documentation renders highlighted blocks without changing source or code-l
   assert.deepEqual(code.map(textContent), blocks.map(([, source]) => `${source}\n`));
   assert.ok(html.includes('var(--code-keyword)'));
   assert.ok(html.includes('href="/docs/example/#introduction"'));
-  assert.equal(findAll(tree, 'script').length, 1, 'Only the existing navigation-collapse script is present');
+  assert.equal(findAll(tree, 'script').length, 2, 'Only the navigation-collapse and theme scripts are present');
   assert.equal(findAll(code[2], 'span').length, 0, 'Terminal output is not coloured');
   assert.equal(findAll(code[3], 'span').length, 0, 'Unknown languages stay plain');
   assert.equal(await readFile(join(root, 'public/llms-full.txt'), 'utf8'), `${markdown.trim()}\n`);
@@ -73,7 +73,7 @@ test('a package guide is a page of the Packages group, with its own source', asy
   for (const directory of ['scripts', 'public/assets', 'public/content/docs']) {
     await mkdir(join(root, directory), { recursive: true });
   }
-  for (const file of ['scripts/render-docs.mjs', 'scripts/page.mjs', 'scripts/highlight.mjs', 'public/assets/crab.css']) {
+  for (const file of ['scripts/render-docs.mjs', 'scripts/page.mjs', 'scripts/highlight.mjs', 'scripts/theme.mjs', 'public/assets/crab.css']) {
     await copyFile(new URL(`../${file}`, import.meta.url), join(root, file));
   }
   await symlink(fileURLToPath(new URL('../node_modules', import.meta.url)), join(root, 'node_modules'), 'dir');

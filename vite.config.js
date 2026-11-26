@@ -5,7 +5,6 @@ import { defineConfig } from 'vite';
 import { highlightCodeBlocks } from './scripts/highlight.mjs';
 import { addBenchmarkPings } from './scripts/benchmark-pings.mjs';
 import { addTheme } from './scripts/theme.mjs';
-import { addAnalytics } from './scripts/analytics.mjs';
 
 // Both landing pages use the same versioned stylesheet URL as generated docs.
 function versionedStylesheet() {
@@ -29,15 +28,6 @@ function benchmarkPings() {
   return {
     name: 'benchmark-pings',
     transformIndexHtml: addBenchmarkPings,
-  };
-}
-
-// Marketing pages only, and only in a production build: `npm run dev` sends nothing.
-function analytics() {
-  return {
-    name: 'analytics',
-    apply: 'build',
-    transformIndexHtml: addAnalytics,
   };
 }
 
@@ -87,7 +77,7 @@ export function generatedDirectoryPages() {
 export default defineConfig({
   root: '.',
   publicDir: 'public',
-  plugins: [generatedDirectoryPages(), highlightedCodeExamples(), benchmarkPings(), themeSwitch(), versionedStylesheet(), analytics()],
+  plugins: [generatedDirectoryPages(), highlightedCodeExamples(), benchmarkPings(), themeSwitch(), versionedStylesheet()],
   build: {
     outDir: 'dist',
     emptyOutDir: true,

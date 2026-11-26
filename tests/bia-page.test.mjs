@@ -90,7 +90,14 @@ test('production builds both landing pages and preview serves the Bia page with 
   const home = await readFile(join(outDir, 'index.html'), 'utf8');
   const bia = await readFile(join(outDir, 'bia/index.html'), 'utf8');
   const tree = checkBiaPage(bia);
-  assert.equal(findAll(tree, 'script').length, 1, 'Only the theme script is shipped for the product page');
+  // Besides the production build's Google Tag Manager tag, the theme script is the only one.
+  const own = findAll(tree, 'script').filter((node) => {
+    const source = node.attrs.find(({ name }) => name === 'src')?.value ?? '';
+    const text = (node.childNodes ?? []).map((child) => child.value ?? '').join('');
+    return !source.startsWith('https://www.googletagmanager.com/') && !text.includes('window.dataLayer');
+  });
+  assert.equal(own.length, 1, 'Only the theme script is shipped for the product page');
+  assert.match(bia, /gtm\.js\?id=GTM-5LZJ6WX4/, 'The production build carries the marketing tag');
   assert.match(bia, /var\(--code-keyword\)/);
   assert.match(bia, /href="\/assets\/crab\.css\?v=[a-f0-9]{10}"/);
   assert.equal(bia.match(/href="(\/assets\/crab\.css[^\"]+)"/)[1], home.match(/href="(\/assets\/crab\.css[^\"]+)"/)[1]);
